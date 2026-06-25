@@ -1,0 +1,720 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ══════════════════════════════════════════════════════
+// AUTH & AUTHORIZATION
+// ══════════════════════════════════════════════════════
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  passwordHash  String
+  firstName     String
+  lastName      String
+  avatar        String?
+  isActive      Boolean   @default(true)
+  emailVerified DateTime?
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  sessions        Session[]
+  userRoles       UserRole[]
+  activityLogs    ActivityLog[]
+  auditLogs       AuditLog[]     @relation("AuditPerformedBy")
+  notifications   Notification[]
+  orderNotes      OrderNote[]
+  goldRateUpdates GoldRate[]
+
+  @@index([email])
+  @@index([isActive])
+  @@index([deletedAt])
+  @@map("users")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  token        String   @unique
+  refreshToken String?  @unique
+  expiresAt    DateTime
+  ipAddress    String?
+  userAgent    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@index([refreshToken])
+  @@map("sessions")
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  isSystem    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userRoles       UserRole[]
+  rolePermissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(uuid())
+  module      String
+  action      String
+  description String?
+  createdAt   DateTime @default(now())
+
+  rolePermissions RolePermission[]
+
+  @@unique([module, action])
+  @@map("permissions")
+}
+
+model UserRole {
+  id        String   @id @default(uuid())
+  userId    String
+  roleId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+  @@map("user_roles")
+}
+
+model RolePermission {
+  id           String   @id @default(uuid())
+  roleId       String
+  permissionId String
+  createdAt    DateTime @default(now())
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid())
+  email     String
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([token])
+  @@index([email])
+  @@map("password_reset_tokens")
+}
+
+// ══════════════════════════════════════════════════════
+// CUSTOMERS
+// ══════════════════════════════════════════════════════
+
+model Customer {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  firstName     String
+  lastName      String
+  phone         String?
+  avatar        String?
+  dateOfBirth   DateTime?
+  gender        String?
+  isActive      Boolean   @default(true)
+  isVerified    Boolean   @default(false)
+  notes         String?
+  tags          String[]  @default([])
+  totalOrders   Int       @default(0)
+  totalSpent    Decimal   @default(0) @db.Decimal(12, 2)
+  lifetimeValue Decimal   @default(0) @db.Decimal(12, 2)
+  source        String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  addresses    Address[]
+  orders       Order[]
+  reviews      Review[]
+  activityLogs ActivityLog[]
+
+  @@index([email])
+  @@index([isActive])
+  @@index([createdAt])
+  @@index([deletedAt])
+  @@map("customers")
+}
+
+model Address {
+  id         String   @id @default(uuid())
+  customerId String
+  label      String   @default("Home")
+  firstName  String
+  lastName   String
+  company    String?
+  line1      String
+  line2      String?
+  city       String
+  state      String
+  postalCode String
+  country    String
+  phone      String?
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  customer       Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  shippingOrders Order[]  @relation("ShippingAddress")
+  billingOrders  Order[]  @relation("BillingAddress")
+
+  @@index([customerId])
+  @@map("addresses")
+}
+
+// ══════════════════════════════════════════════════════
+// ORDERS
+// ══════════════════════════════════════════════════════
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  RETURNED
+  REFUNDED
+  PARTIALLY_REFUNDED
+  ON_HOLD
+}
+
+enum OrderSource {
+  WEB
+  MOBILE
+  POS
+  API
+  MANUAL
+}
+
+model Order {
+  id                String      @id @default(uuid())
+  orderNumber       String      @unique
+  customerId        String
+  status            OrderStatus @default(PENDING)
+  source            OrderSource @default(WEB)
+  shippingAddressId String?
+  billingAddressId  String?
+  currency          String      @default("INR")
+  subtotal          Decimal     @db.Decimal(12, 2)
+  discountAmount    Decimal     @default(0) @db.Decimal(12, 2)
+  taxAmount         Decimal     @default(0) @db.Decimal(12, 2)
+  shippingAmount    Decimal     @default(0) @db.Decimal(12, 2)
+  total             Decimal     @db.Decimal(12, 2)
+  notes             String?
+  internalNotes     String?
+  tags              String[]    @default([])
+  metadata          Json?
+  cancelledAt       DateTime?
+  cancelReason      String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  deletedAt         DateTime?
+
+  customer        Customer      @relation(fields: [customerId], references: [id])
+  shippingAddress Address?      @relation("ShippingAddress", fields: [shippingAddressId], references: [id])
+  billingAddress  Address?      @relation("BillingAddress", fields: [billingAddressId], references: [id])
+  orderItems      OrderItem[]
+  payments        Payment[]
+  refunds         Refund[]
+  shipments       Shipment[]
+  orderNotes      OrderNote[]
+  activityLogs    ActivityLog[]
+
+  @@index([customerId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([orderNumber])
+  @@index([deletedAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id         String   @id @default(uuid())
+  orderId    String
+  productId  String
+  variantId  String?
+  sku        String?
+  name       String
+  image      String?
+  quantity   Int
+  unitPrice  Decimal  @db.Decimal(12, 2)
+  totalPrice Decimal  @db.Decimal(12, 2)
+  discount   Decimal  @default(0) @db.Decimal(12, 2)
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+model OrderNote {
+  id         String   @id @default(uuid())
+  orderId    String
+  authorId   String
+  content    String
+  isInternal Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  order  Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  author User  @relation(fields: [authorId], references: [id])
+
+  @@index([orderId])
+  @@map("order_notes")
+}
+
+// ══════════════════════════════════════════════════════
+// PAYMENTS
+// ══════════════════════════════════════════════════════
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+  PAYPAL
+  BANK_TRANSFER
+  CRYPTO
+  CASH_ON_DELIVERY
+  STORE_CREDIT
+}
+
+model Payment {
+  id               String        @id @default(uuid())
+  orderId          String
+  transactionId    String?       @unique
+  gatewayReference String?
+  method           PaymentMethod
+  status           PaymentStatus @default(PENDING)
+  amount           Decimal       @db.Decimal(12, 2)
+  currency         String        @default("INR")
+  gatewayResponse  Json?
+  failureReason    String?
+  processedAt      DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  order   Order    @relation(fields: [orderId], references: [id])
+  refunds Refund[]
+
+  @@index([orderId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("payments")
+}
+
+enum RefundStatus {
+  PENDING
+  APPROVED
+  PROCESSING
+  COMPLETED
+  REJECTED
+}
+
+model Refund {
+  id          String       @id @default(uuid())
+  orderId     String
+  paymentId   String
+  amount      Decimal      @db.Decimal(12, 2)
+  reason      String
+  status      RefundStatus @default(PENDING)
+  approvedBy  String?
+  approvedAt  DateTime?
+  processedAt DateTime?
+  gatewayRef  String?
+  notes       String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  payment Payment @relation(fields: [paymentId], references: [id])
+
+  @@index([orderId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("refunds")
+}
+
+// ══════════════════════════════════════════════════════
+// SHIPPING
+// ══════════════════════════════════════════════════════
+
+enum ShipmentStatus {
+  PENDING
+  LABEL_CREATED
+  PICKED_UP
+  IN_TRANSIT
+  OUT_FOR_DELIVERY
+  DELIVERED
+  FAILED_DELIVERY
+  RETURNED
+  CANCELLED
+}
+
+model Shipment {
+  id                String         @id @default(uuid())
+  orderId           String
+  carrierId         String?
+  carrierName       String?
+  trackingNumber    String?
+  trackingUrl       String?
+  status            ShipmentStatus @default(PENDING)
+  estimatedDelivery DateTime?
+  deliveredAt       DateTime?
+  weight            Decimal?       @db.Decimal(8, 3)
+  dimensions        Json?
+  labelUrl          String?
+  notes             String?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  order          Order           @relation(fields: [orderId], references: [id])
+  trackingEvents TrackingEvent[]
+
+  @@index([orderId])
+  @@index([trackingNumber])
+  @@index([status])
+  @@map("shipments")
+}
+
+model TrackingEvent {
+  id          String   @id @default(uuid())
+  shipmentId  String
+  status      String
+  description String
+  location    String?
+  timestamp   DateTime
+  raw         Json?
+  createdAt   DateTime @default(now())
+
+  shipment Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+
+  @@index([shipmentId])
+  @@map("tracking_events")
+}
+
+// ══════════════════════════════════════════════════════
+// REVIEWS
+// ══════════════════════════════════════════════════════
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  FLAGGED
+}
+
+model Review {
+  id             String       @id @default(uuid())
+  customerId     String
+  productId      String
+  orderId        String?
+  rating         Int
+  title          String?
+  content        String
+  status         ReviewStatus @default(PENDING)
+  isVerified     Boolean      @default(false)
+  helpfulVotes   Int          @default(0)
+  moderatedBy    String?
+  moderatedAt    DateTime?
+  moderationNote String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  customer Customer @relation(fields: [customerId], references: [id])
+  product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([status])
+  @@index([customerId])
+  @@index([createdAt])
+  @@map("reviews")
+}
+
+// ══════════════════════════════════════════════════════
+// NOTIFICATIONS
+// ══════════════════════════════════════════════════════
+
+enum NotificationPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum NotificationType {
+  ORDER_PLACED
+  ORDER_SHIPPED
+  ORDER_DELIVERED
+  PAYMENT_RECEIVED
+  PAYMENT_FAILED
+  REFUND_INITIATED
+  REFUND_COMPLETED
+  REVIEW_SUBMITTED
+  STOCK_ALERT
+  SYSTEM_ALERT
+  INTEGRATION_ERROR
+  CUSTOM
+}
+
+model Notification {
+  id         String               @id @default(uuid())
+  userId     String
+  type       NotificationType
+  priority   NotificationPriority @default(MEDIUM)
+  title      String
+  body       String
+  data       Json?
+  isRead     Boolean              @default(false)
+  readAt     DateTime?
+  isArchived Boolean              @default(false)
+  archivedAt DateTime?
+  expiresAt  DateTime?
+  createdAt  DateTime             @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@index([userId, isArchived])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+// ══════════════════════════════════════════════════════
+// AUDIT & ACTIVITY LOGS
+// ══════════════════════════════════════════════════════
+
+model ActivityLog {
+  id          String   @id @default(uuid())
+  userId      String?
+  customerId  String?
+  orderId     String?
+  action      String
+  module      String
+  description String
+  metadata    Json?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  user     User?     @relation(fields: [userId], references: [id])
+  customer Customer? @relation(fields: [customerId], references: [id])
+  order    Order?    @relation(fields: [orderId], references: [id])
+
+  @@index([userId])
+  @@index([customerId])
+  @@index([module])
+  @@index([createdAt])
+  @@map("activity_logs")
+}
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  performedBy String
+  action      String
+  module      String
+  entityType  String
+  entityId    String
+  oldValues   Json?
+  newValues   Json?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  performer User @relation("AuditPerformedBy", fields: [performedBy], references: [id])
+
+  @@index([performedBy])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// ══════════════════════════════════════════════════════
+// INTEGRATIONS
+// ══════════════════════════════════════════════════════
+
+enum IntegrationStatus {
+  ACTIVE
+  INACTIVE
+  ERROR
+  PENDING
+}
+
+model ApiIntegration {
+  id            String            @id @default(uuid())
+  name          String
+  slug          String            @unique
+  type          String
+  status        IntegrationStatus @default(PENDING)
+  baseUrl       String
+  apiKey        String?
+  apiSecret     String?
+  webhookUrl    String?
+  webhookSecret String?
+  config        Json?
+  lastSyncAt    DateTime?
+  lastErrorAt   DateTime?
+  lastError     String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  syncLogs ApiSyncLog[]
+
+  @@map("api_integrations")
+}
+
+enum SyncStatus {
+  SUCCESS
+  FAILED
+  PARTIAL
+}
+
+model ApiSyncLog {
+  id            String     @id @default(uuid())
+  integrationId String
+  type          String
+  status        SyncStatus
+  recordsTotal  Int        @default(0)
+  recordsSynced Int        @default(0)
+  errors        Json?
+  duration      Int?
+  startedAt     DateTime
+  completedAt   DateTime?
+  createdAt     DateTime   @default(now())
+
+  integration ApiIntegration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+
+  @@index([integrationId])
+  @@index([createdAt])
+  @@map("api_sync_logs")
+}
+
+// ══════════════════════════════════════════════════════
+// SETTINGS
+// ══════════════════════════════════════════════════════
+
+model Setting {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     Json
+  group     String
+  label     String?
+  isPublic  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([group])
+  @@map("settings")
+}
+
+// ══════════════════════════════════════════════════════
+// PRODUCTS & INVENTORY
+// ══════════════════════════════════════════════════════
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  sku         String   @unique
+  description String?
+  categoryId  String?
+  basePrice   Decimal  @db.Decimal(12, 2)
+  weight      Decimal? @db.Decimal(8, 3) // Weight in grams
+  karatage    Int? // e.g., 22 or 24
+  inventory   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orderItems OrderItem[]
+  reviews    Review[]
+
+  @@index([categoryId])
+  @@index([isActive])
+  @@map("products")
+}
+
+// ══════════════════════════════════════════════════════
+// LEADS
+// ══════════════════════════════════════════════════════
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  INTERESTED
+  CONVERTED
+  CLOSED
+}
+
+model Lead {
+  id        String     @id @default(uuid())
+  firstName String
+  lastName  String
+  email     String?
+  phone     String?
+  status    LeadStatus @default(NEW)
+  notes     String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("leads")
+}
+
+// ══════════════════════════════════════════════════════
+// GOLD RATES
+// ══════════════════════════════════════════════════════
+
+model GoldRate {
+  id          String   @id @default(uuid())
+  rate22k     Decimal  @db.Decimal(12, 2)
+  rate24k     Decimal  @db.Decimal(12, 2)
+  effectiveAt DateTime
+  updatedBy   String
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  updatedByUser User @relation(fields: [updatedBy], references: [id])
+
+  @@index([effectiveAt])
+  @@map("gold_rates")
+}

@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+:root {
+  /* Brand - Premium Gold */
+  --brand-50:  #fbf9f1;
+  --brand-100: #f6eed2;
+  --brand-200: #ebdca7;
+  --brand-300: #dec576;
+  --brand-400: #cfa747;
+  --brand-500: #d4af37;
+  --brand-600: #b8860b;
+  --brand-700: #9c6e00;
+  --brand-800: #7a5400;
+  --brand-900: #593b00;
+
+  /* Gradient */
+  --grad-start: #d4af37;
+  --grad-end:   #aa7c11;
+  --gradient:   linear-gradient(135deg, #d4af37, #aa7c11);
+
+  /* Layout */
+  --sidebar-width: 240px;
+  --header-height: 64px;
+
+  /* Backgrounds */
+  --bg-app:     #f0f2f8;
+  --bg-card:    #ffffff;
+  --bg-sidebar: #ffffff;
+
+  /* Borders */
+  --border:       rgba(0, 0, 0, 0.07);
+  --border-hover: rgba(0, 0, 0, 0.14);
+
+  /* Text */
+  --text-primary:   #1a1d3b;
+  --text-secondary: #6b7280;
+  --text-muted:     #9ca3af;
+  --text-inverse:   #ffffff;
+
+  /* Status */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger:  #ef4444;
+  --info:    #3b82f6;
+
+  /* Shadows */
+  --shadow-sm:   0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:   0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg:   0 10px 30px rgba(0,0,0,0.10);
+  --shadow-card: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
+
+/* Selection */
+::selection { background: rgba(212,175,55,0.15); color: var(--text-primary); }
+
+/* Focus */
+:focus-visible { outline: 2px solid var(--brand-500); outline-offset: 2px; border-radius: 4px; }
+
+/* ─── Cards ─────────────────────────────────── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.2s;
+}
+.card:hover { box-shadow: var(--shadow-md); }
+
+/* ─── Status Badges ──────────────────────────── */
+.status-pending    { background: rgba(245,158,11,0.12);  color: #d97706; }
+.status-confirmed  { background: rgba(59,130,246,0.12);  color: #2563eb; }
+.status-processing { background: var(--brand-100);  color: var(--brand-600); }
+.status-shipped    { background: rgba(16,185,129,0.12);  color: #059669; }
+.status-delivered  { background: rgba(16,185,129,0.12);  color: #059669; }
+.status-cancelled  { background: rgba(239,68,68,0.12);   color: #dc2626; }
+.status-refunded   { background: rgba(107,114,128,0.12); color: #4b5563; }
+.status-on_hold    { background: rgba(245,158,11,0.12);  color: #d97706; }
+
+/* ─── Gradient helpers ───────────────────────── */
+.gradient-bg { background: var(--gradient); }
+
+.gradient-text {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Skeleton ───────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f3f4f6 25%, #e9eaec 50%, #f3f4f6 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 6px;
+}
+
+/* ─── Animations ─────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in-up { animation: fadeInUp 0.3s ease forwards; }
+
+/* ─── Color icon blobs ───────────────────────── */
+.icon-blob {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ─── Input base ─────────────────────────────── */
+input, select, textarea {
+  font-family: inherit;
+}
