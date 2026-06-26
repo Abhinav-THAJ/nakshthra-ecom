@@ -2376,6 +2376,19 @@ img { display: block; max-width: 100%; }
 
 /* ============================================================ MOBILE CATEGORIES (CARATLANE STYLE) ============================================================ */
 
+@media (min-width: 769px) {
+  .mobile-categories-scroll,
+  .mobile-submenu-overlay {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-bar {
+    display: none !important;
+  }
+}
+
 /* Horizontal scroll container */
 .mobile-categories-scroll {
   display: flex;
