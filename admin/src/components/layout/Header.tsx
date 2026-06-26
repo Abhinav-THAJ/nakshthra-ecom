@@ -155,7 +155,7 @@ export function Header() {
               <DropdownLink href="/settings" icon={Settings} label="Settings" onClick={() => setProfileOpen(false)} />
               <div style={{ height: 1, background: "var(--border)", margin: "4px 0" }} />
               <button
-                onClick={() => signOut({ callbackUrl: "/login" })}
+                onClick={() => signOut({ callbackUrl: "/admin/login" })}
                 style={{
                   display: "flex",
                   alignItems: "center",

@@ -8,7 +8,7 @@ import { formatRelativeTime } from "@/lib/utils";
 
 async function fetchReviews(params: Record<string, string>) {
   const q = new URLSearchParams(params).toString();
-  const res = await fetch(`/api/v1/reviews?${q}`);
+  const res = await fetch(`/admin/api/v1/reviews?${q}`);
   if (!res.ok) throw new Error("Failed");
   return res.json();
 }
@@ -113,11 +113,11 @@ export default function ReviewsPage() {
                     </span>
                     {review.status === "PENDING" && (
                       <div style={{ display: "flex", gap: 8 }}>
-                        <button onClick={async () => await fetch(`/api/v1/reviews/${review.id}/moderate`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: "APPROVED" }) })}
+                        <button onClick={async () => await fetch(`/admin/api/v1/reviews/${review.id}/moderate`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: "APPROVED" }) })}
                           style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8, background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.25)", color: "#059669", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
                           <CheckCircle size={14} /> Approve
                         </button>
-                        <button onClick={async () => await fetch(`/api/v1/reviews/${review.id}/moderate`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: "REJECTED" }) })}
+                        <button onClick={async () => await fetch(`/admin/api/v1/reviews/${review.id}/moderate`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: "REJECTED" }) })}
                           style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8, background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)", color: "#dc2626", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
                           <XCircle size={14} /> Reject
                         </button>

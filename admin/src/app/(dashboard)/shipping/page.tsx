@@ -8,7 +8,7 @@ import { formatDate, formatRelativeTime } from "@/lib/utils";
 
 async function fetchShipments(params: Record<string, string>) {
   const q = new URLSearchParams(params).toString();
-  const res = await fetch(`/api/v1/shipping?${q}`);
+  const res = await fetch(`/admin/api/v1/shipping?${q}`);
   if (!res.ok) throw new Error("Failed");
   return res.json();
 }

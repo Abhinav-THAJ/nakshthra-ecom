@@ -11,7 +11,7 @@ import { formatCurrency, formatNumber } from "@/lib/utils";
 import { TrendingUp, TrendingDown, IndianRupee, ShoppingCart, Users, RotateCcw } from "lucide-react";
 
 async function fetchOverview() {
-  const res = await fetch("/api/v1/analytics/overview");
+  const res = await fetch("/admin/api/v1/analytics/overview");
   if (!res.ok) throw new Error("Failed");
   return res.json();
 }

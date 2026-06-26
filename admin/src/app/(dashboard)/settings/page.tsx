@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Settings, Save, Globe, Shield, Mail, Bell, Loader2, CheckCircle } from "lucide-react";
 
 async function fetchSettings() {
-  const res = await fetch("/api/v1/settings");
+  const res = await fetch("/admin/api/v1/settings");
   if (!res.ok) throw new Error("Failed");
   return res.json();
 }
@@ -25,7 +25,7 @@ export default function SettingsPage() {
 
   const mutation = useMutation({
     mutationFn: (updates: Record<string, unknown>) =>
-      fetch("/api/v1/settings", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(updates) }),
+      fetch("/admin/api/v1/settings", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(updates) }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["settings"] });
       setLocalChanges({});

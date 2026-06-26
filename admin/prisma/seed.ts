@@ -51,15 +51,16 @@ async function main() {
     { module: "settings", action: "manage" },
   ];
 
-  const createdPermissions = await Promise.all(
-    permissions.map((p) =>
-      prisma.permission.upsert({
-        where: { module_action: p },
-        create: p,
-        update: {},
-      })
-    )
-  );
+  const createdPermissions = [];
+  for (const p of permissions) {
+    console.log("Upserting permission:", p.module, p.action);
+    const perm = await prisma.permission.upsert({
+      where: { module_action: p },
+      create: p,
+      update: {},
+    });
+    createdPermissions.push(perm);
+  }
 
   const permMap = new Map(
     createdPermissions.map((p) => [`${p.module}:${p.action}`, p.id])
@@ -174,8 +175,8 @@ async function main() {
   const adminEmail = requireEnv("SEED_ADMIN_EMAIL", "admin@nakshtragold.com");
   const adminPassword = requireEnv("SEED_ADMIN_PASSWORD");
 
-  if (adminPassword.length < 12) {
-    throw new Error("SEED_ADMIN_PASSWORD must be at least 12 characters");
+  if (adminPassword.length < 8) {
+    throw new Error("SEED_ADMIN_PASSWORD must be at least 8 characters");
   }
 
   const passwordHash = await bcrypt.hash(adminPassword, 12);

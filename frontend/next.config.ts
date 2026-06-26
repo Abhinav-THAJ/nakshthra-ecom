@@ -1,17 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  async redirects() {
+  async rewrites() {
     return [
       {
         source: '/admin',
-        destination: 'http://localhost:3001',
-        permanent: false,
+        destination: 'http://localhost:3001/admin',
       },
       {
         source: '/admin/:path*',
-        destination: 'http://localhost:3001/:path*',
-        permanent: false,
+        destination: 'http://localhost:3001/admin/:path*',
       }
     ];
   },

@@ -1,0 +1,8 @@
+GET Error: 400 "Bad request."
+GET request to: http://localhost:3001/api/auth/error (pathname: /api/auth/error)
+GET Error: 400 "Bad request."
+GET request to: http://localhost:3001/api/auth/csrf (pathname: /api/auth/csrf)
+GET Error: 400 "Bad request."
+GET request to: http://localhost:3001/api/auth/error (pathname: /api/auth/error)
+GET Error: 400 "Bad request."
+GET request to: http://localhost:3001/api/auth/csrf (pathname: /api/auth/csrf)

@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "app",
+    "admin",
     "frontend"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev -w app\" \"npm run dev -w frontend\"",
+    "dev": "concurrently \"npm run dev -w admin\" \"npm run dev -w frontend\"",
     "build": "npm run build --workspaces --if-present",
-    "start": "concurrently \"npm run start -w app\" \"npm run start -w frontend\""
+    "start": "concurrently \"npm run start -w admin\" \"npm run start -w frontend\""
   },
   "devDependencies": {
     "concurrently": "^10.0.3"

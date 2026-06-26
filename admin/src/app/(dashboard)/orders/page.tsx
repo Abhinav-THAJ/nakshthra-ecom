@@ -8,7 +8,7 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 
 async function fetchOrders(params: Record<string, string>) {
   const q = new URLSearchParams(params).toString();
-  const res = await fetch(`/api/v1/orders?${q}`);
+  const res = await fetch(`/admin/api/v1/orders?${q}`);
   if (!res.ok) throw new Error("Failed");
   return res.json();
 }

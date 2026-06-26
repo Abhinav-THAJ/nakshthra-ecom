@@ -8,14 +8,14 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 
 async function fetchTransactions(params: Record<string, string>) {
   const q = new URLSearchParams(params).toString();
-  const res = await fetch(`/api/v1/payments/transactions?${q}`);
+  const res = await fetch(`/admin/api/v1/payments/transactions?${q}`);
   if (!res.ok) throw new Error("Failed");
   return res.json();
 }
 
 async function fetchRefunds(params: Record<string, string>) {
   const q = new URLSearchParams(params).toString();
-  const res = await fetch(`/api/v1/payments/refunds?${q}`);
+  const res = await fetch(`/admin/api/v1/payments/refunds?${q}`);
   if (!res.ok) throw new Error("Failed");
   return res.json();
 }

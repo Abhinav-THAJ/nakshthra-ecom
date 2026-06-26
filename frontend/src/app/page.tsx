@@ -20,7 +20,7 @@ export default async function Home() {
 
   // Map database products to the frontend component format
   // We use fallback images and ratings since they are not in the core Product schema yet
-  const formattedProducts = dbProducts.map(p => ({
+  const formattedProducts = dbProducts.map((p: any) => ({
     id: p.id,
     name: p.name,
     price: Number(p.basePrice),
@@ -57,7 +57,7 @@ export default async function Home() {
           </div>
           <div className="products-grid">
             {trendingProducts.length > 0 ? (
-              trendingProducts.map((prod) => (
+              trendingProducts.map((prod: any) => (
                 <ProductCard key={prod.id} {...prod} />
               ))
             ) : (
@@ -79,7 +79,7 @@ export default async function Home() {
           </div>
           <div className="products-grid">
             {newArrivals.length > 0 ? (
-              newArrivals.map((prod) => (
+              newArrivals.map((prod: any) => (
                 <ProductCard key={prod.id} {...prod} />
               ))
             ) : (

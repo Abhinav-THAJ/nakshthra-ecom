@@ -8,13 +8,13 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 
 async function fetchProducts(params: Record<string, string>) {
   const q = new URLSearchParams(params).toString();
-  const res = await fetch(`/api/v1/products?${q}`);
+  const res = await fetch(`/admin/api/v1/products?${q}`);
   if (!res.ok) throw new Error("Failed to fetch products");
   return res.json();
 }
 
 async function createProduct(data: any) {
-  const res = await fetch("/api/v1/products", {
+  const res = await fetch("/admin/api/v1/products", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),

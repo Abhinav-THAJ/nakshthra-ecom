@@ -9,7 +9,7 @@ export default async function EarringsPage() {
     orderBy: { createdAt: 'desc' }
   });
   
-  const products = dbProducts.map(p => ({
+  const products = dbProducts.map((p: any) => ({
     id: p.id,
     name: p.name,
     price: Number(p.basePrice),

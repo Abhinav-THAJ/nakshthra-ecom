@@ -10,16 +10,20 @@ const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
 const PUBLIC_ROUTES = [
   "/login",
+  "/admin/login",
   "/forgot-password",
+  "/admin/forgot-password",
   "/reset-password",
+  "/admin/reset-password",
   "/api/auth", // NextAuth internal routes
+  "/admin/api/auth",
   "/api/v1/auth/login",
   "/api/v1/auth/refresh",
   "/api/v1/auth/forgot-password",
   "/api/v1/auth/reset-password",
 ];
 
-const AUTH_ROUTES = ["/login", "/forgot-password", "/reset-password"];
+const AUTH_ROUTES = ["/login", "/admin/login", "/forgot-password", "/admin/forgot-password", "/reset-password", "/admin/reset-password"];
 
 export default auth((req: NextRequest & { auth: any }) => {
   const { pathname } = req.nextUrl;
@@ -72,13 +76,13 @@ export default auth((req: NextRequest & { auth: any }) => {
   if (PUBLIC_ROUTES.some((route) => pathname.startsWith(route))) {
     // Redirect authenticated users away from auth pages
     if (isAuthenticated && AUTH_ROUTES.includes(pathname)) {
-      return NextResponse.redirect(new URL("/", req.url));
+      return NextResponse.redirect(new URL("/admin/", req.url));
     }
     return NextResponse.next();
   }
 
   if (!isAuthenticated) {
-    const loginUrl = new URL("/login", req.url);
+    const loginUrl = new URL("/admin/login", req.url);
     loginUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(loginUrl);
   }

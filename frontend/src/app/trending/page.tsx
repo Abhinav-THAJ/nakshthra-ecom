@@ -9,7 +9,7 @@ export default async function TrendingPage() {
     orderBy: { createdAt: 'desc' }
   });
   
-  const products = dbProducts.map(p => ({
+  const products = dbProducts.map((p: any) => ({
     id: p.id,
     name: p.name,
     price: Number(p.basePrice),
@@ -29,7 +29,6 @@ export default async function TrendingPage() {
       subtitle="The most loved, most wishlisted jewellery right now — don't miss out!"
       bannerImage="/hero_ashlesha.png"
       products={products}
-      filters={trendingFilters}
     />
   );
 }

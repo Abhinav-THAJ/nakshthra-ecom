@@ -8,7 +8,7 @@ import { formatRelativeTime } from "@/lib/utils";
 
 async function fetchNotifications(params: Record<string, string>) {
   const q = new URLSearchParams(params).toString();
-  const res = await fetch(`/api/v1/notifications?${q}`);
+  const res = await fetch(`/admin/api/v1/notifications?${q}`);
   if (!res.ok) throw new Error("Failed");
   return res.json();
 }
@@ -39,7 +39,7 @@ export default function NotificationsPage() {
   const { data, isLoading } = useQuery({ queryKey: ["notifications", filter], queryFn: () => fetchNotifications(params), refetchInterval: 30000 });
 
   const markAllRead = useMutation({
-    mutationFn: () => fetch("/api/v1/notifications", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "markAllRead" }) }),
+    mutationFn: () => fetch("/admin/api/v1/notifications", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "markAllRead" }) }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["notifications"] }),
   });
 

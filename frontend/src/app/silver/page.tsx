@@ -9,7 +9,7 @@ export default async function SilverPage() {
     orderBy: { createdAt: 'desc' }
   });
   
-  const products = dbProducts.map(p => ({
+  const products = dbProducts.map((p: any) => ({
     id: p.id,
     name: p.name,
     price: Number(p.basePrice),
@@ -29,7 +29,6 @@ export default async function SilverPage() {
       subtitle="Trendy silver jewellery for everyday wear — by Shaya, a CaratLane brand"
       bannerImage="/col_adaa.png"
       products={products}
-      filters={silverFilters}
     />
   );
 }

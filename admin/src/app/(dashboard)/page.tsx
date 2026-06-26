@@ -64,7 +64,7 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 async function fetchDashboard() {
-  const res = await fetch("/api/v1/analytics/overview");
+  const res = await fetch("/admin/api/v1/analytics/overview");
   if (!res.ok) throw new Error("Failed");
   const json = await res.json();
   return json.data;

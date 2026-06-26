@@ -1,0 +1,10 @@
+project_id = "xjaolxojuapcrkctrddp"
+
+[api]
+enabled = true
+
+[db]
+port = 5432
+
+[functions.todos]
+verify_jwt = false

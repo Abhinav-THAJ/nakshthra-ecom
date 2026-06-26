@@ -9,7 +9,7 @@ export default async function GiftingPage() {
     orderBy: { createdAt: 'desc' }
   });
   
-  const products = dbProducts.map(p => ({
+  const products = dbProducts.map((p: any) => ({
     id: p.id,
     name: p.name,
     price: Number(p.basePrice),
@@ -29,7 +29,6 @@ export default async function GiftingPage() {
       subtitle="The perfect jewellery gift for every occasion — anniversary, birthday, festivals & more"
       bannerImage="/polki_banner.png"
       products={products}
-      filters={giftFilters}
     />
   );
 }

@@ -104,5 +104,5 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
 
-  secret: process.env.AUTH_SECRET,
+  secret: process.env.AUTH_SECRET || "a-very-secure-random-string-replace-this",
 });

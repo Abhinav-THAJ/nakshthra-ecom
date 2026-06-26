@@ -8,7 +8,7 @@ import { formatDate, formatRelativeTime, getInitials } from "@/lib/utils";
 
 async function fetchUsers(params: Record<string, string>) {
   const q = new URLSearchParams(params).toString();
-  const res = await fetch(`/api/v1/users?${q}`);
+  const res = await fetch(`/admin/api/v1/users?${q}`);
   if (!res.ok) throw new Error("Failed");
   return res.json();
 }
@@ -40,7 +40,7 @@ export default function UsersPage() {
 
   const createMutation = useMutation({
     mutationFn: async (newData: any) => {
-      const res = await fetch("/api/v1/users", {
+      const res = await fetch("/admin/api/v1/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newData),

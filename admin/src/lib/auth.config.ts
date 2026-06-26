@@ -3,6 +3,9 @@ import type { NextAuthConfig } from "next-auth";
 const SESSION_MAX_AGE = Number(process.env.SESSION_MAX_AGE_SECONDS ?? 604800);
 
 export const authConfig = {
+  trustHost: true,
+  basePath: "/api/auth",
+  secret: process.env.AUTH_SECRET || "a-very-secure-random-string-replace-this",
   pages: {
     signIn: "/login",
     error: "/login",

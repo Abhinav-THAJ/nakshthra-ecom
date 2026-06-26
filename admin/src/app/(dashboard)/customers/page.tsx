@@ -8,7 +8,7 @@ import { formatCurrency, formatDate, getInitials } from "@/lib/utils";
 
 async function fetchCustomers(params: Record<string, string>) {
   const q = new URLSearchParams(params).toString();
-  const res = await fetch(`/api/v1/customers?${q}`);
+  const res = await fetch(`/admin/api/v1/customers?${q}`);
   if (!res.ok) throw new Error("Failed");
   return res.json();
 }
@@ -28,7 +28,7 @@ export default function CustomersPage() {
 
   const createMutation = useMutation({
     mutationFn: async (newData: any) => {
-      const res = await fetch("/api/v1/customers", {
+      const res = await fetch("/admin/api/v1/customers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newData),
