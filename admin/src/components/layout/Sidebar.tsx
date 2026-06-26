@@ -1,5 +1,7 @@
 "use client";
 
+import { useUIStore } from "@/store";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
@@ -42,9 +44,19 @@ const navItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const isActive = (href: string) => href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const { sidebarOpen, setSidebarOpen } = useUIStore();
 
   return (
-    <aside
+    <>
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div 
+          className="mobile-sidebar-overlay"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      <aside
+        className={`app-sidebar ${sidebarOpen ? 'open' : ''}`}
       style={{
         position: "fixed",
         inset: "0 auto 0 0",
@@ -144,5 +156,6 @@ export function Sidebar() {
         </div>
       </div>
     </aside>
+    </>
   );
 }

@@ -1,18 +1,21 @@
 "use client";
 
 import { useSession, signOut } from "next-auth/react";
-import { Bell, Search, ChevronDown, LogOut, User, Settings } from "lucide-react";
+import { Bell, Search, ChevronDown, LogOut, User, Settings, Menu } from "lucide-react";
 import { getInitials } from "@/lib/utils";
 import { useState } from "react";
+import { useUIStore } from "@/store";
 import Link from "next/link";
 
 export function Header() {
   const { data: session } = useSession();
   const [profileOpen, setProfileOpen] = useState(false);
   const user = session?.user;
+  const toggleSidebar = useUIStore((state) => state.toggleSidebar);
 
   return (
     <header
+      className="app-header"
       style={{
         position: "fixed",
         top: 0,
@@ -28,6 +31,24 @@ export function Header() {
         boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
       }}
     >
+      {/* Hamburger Menu (Mobile only) */}
+      <button 
+        className="mobile-menu-btn"
+        onClick={toggleSidebar}
+        style={{
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          marginRight: 12,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "var(--text-primary)"
+        }}
+      >
+        <Menu size={20} />
+      </button>
+
       {/* Search */}
       <div
         style={{

@@ -111,7 +111,7 @@ export default function DashboardPage() {
       </div>
 
       {/* ── Stat Cards ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 16 }}>
+      <div className="dashboard-stats-grid">
         {STAT_CARDS.map((card, i) => {
           const value = stats?.[card.key as keyof typeof stats];
           const change = stats?.[card.changeKey as keyof typeof stats] as number | undefined;
@@ -165,7 +165,7 @@ export default function DashboardPage() {
       </div>
 
       {/* ── Charts Row ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 16 }}>
+      <div className="dashboard-charts-grid">
         {/* Revenue Area Chart */}
         <motion.div className="card" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
@@ -238,7 +238,7 @@ export default function DashboardPage() {
       </div>
 
       {/* ── Bottom Row ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+      <div className="dashboard-bottom-grid">
         {/* Recent Orders */}
         <motion.div className="card" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
