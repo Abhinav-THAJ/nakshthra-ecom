@@ -2687,3 +2687,11 @@ img { display: block; max-width: 100%; }
     margin-top: 24px !important;
   }
 }
+
+/* Mobile Fix: Gap above search bar */
+@media (max-width: 768px) {
+  .mobile-search {
+    padding-top: 12px !important;
+    padding-bottom: 8px !important;
+  }
+}
