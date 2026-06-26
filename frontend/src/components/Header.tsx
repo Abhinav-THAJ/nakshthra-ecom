@@ -4,6 +4,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import { Search, MapPin, Heart, ShoppingCart, User, ChevronDown, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import MobileCategories from './MobileCategories';
 
 interface MenuData {
   featured: string[];
@@ -453,6 +454,9 @@ export default function Header() {
           </button>
         </div>
       </div>
+
+      {/* Mobile Categories Scroll & Submenu Overlay */}
+      <MobileCategories categories={categories} menuConfigs={menuConfigs} categoryRoutes={categoryRoutes} />
     </header>
   );
 }
