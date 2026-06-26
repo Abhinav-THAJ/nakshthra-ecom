@@ -2618,3 +2618,56 @@ img { display: block; max-width: 100%; }
     font-size: 10px !important;
   }
 }
+
+/* Mobile Fix: Promo Banners as Grid */
+@media (max-width: 768px) {
+  .promo-slide-row {
+    flex-direction: row !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+  .promo-banner-slide-card {
+    width: 100% !important;
+    height: 180px !important;
+    border-radius: 12px !important;
+  }
+  .promo-slide-text h3 { font-size: 16px !important; margin-bottom: 4px !important; }
+  .promo-slide-text p { font-size: 11px !important; margin-bottom: 8px !important; }
+  .promo-slide-text .price-tag { font-size: 9px !important; padding: 4px 8px !important; margin-bottom: 6px !important; }
+  .promo-cta-link { font-size: 10px !important; letter-spacing: 1px !important; }
+}
+
+/* Mobile Fix: Center the last odd item in Nakshathra collections */
+@media (max-width: 768px) {
+  .collections-five-grid .collection-five-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1 !important;
+    justify-self: center !important;
+    width: calc(50% - 6px) !important;
+  }
+}
+
+/* Mobile Fix: Advantage Section Grid */
+@media (max-width: 768px) {
+  .advantage-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+  .advantage-card {
+    padding: 16px 12px !important;
+  }
+  .advantage-card h3 {
+    font-size: 14px !important;
+  }
+  .advantage-card p {
+    font-size: 10px !important;
+  }
+  .advantage-card .icon-wrapper {
+    width: 48px !important;
+    height: 48px !important;
+    margin-bottom: 12px !important;
+  }
+  .collections-five-grid {
+    margin-bottom: 32px !important;
+  }
+}
