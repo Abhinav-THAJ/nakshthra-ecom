@@ -2600,3 +2600,21 @@ img { display: block; max-width: 100%; }
     justify-content: flex-start !important;
   }
 }
+
+/* Mobile Fix: Collections as 2-column grid */
+@media (max-width: 768px) {
+  .collections-five-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+  .collection-five-card {
+    min-height: 240px !important;
+    border-radius: 12px !important;
+  }
+  .five-card-content h3 {
+    font-size: 18px !important;
+  }
+  .five-card-content p {
+    font-size: 10px !important;
+  }
+}
