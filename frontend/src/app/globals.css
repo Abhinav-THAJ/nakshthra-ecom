@@ -2572,3 +2572,10 @@ img { display: block; max-width: 100%; }
     width: 100% !important;
   }
 }
+
+/* Mobile Fix: Make header scrollable instead of sticky */
+@media (max-width: 768px) {
+  .header-wrapper {
+    position: relative !important;
+  }
+}
