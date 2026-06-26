@@ -224,7 +224,7 @@ export default function CustomersPage() {
               )}
 
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <div className="form-grid-2">
                   <div>
                     <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", marginBottom: 4 }}>First Name *</label>
                     <input
@@ -310,4 +310,6 @@ export default function CustomersPage() {
     </div>
   );
 }
+
+
 

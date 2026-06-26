@@ -69,12 +69,12 @@ export default function NotificationsPage() {
         )}
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#fff", border: "1px solid var(--border)", borderRadius: 10, padding: 4, boxShadow: "var(--shadow-sm)", width: "fit-content" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#fff", border: "1px solid var(--border)", borderRadius: 10, padding: 4, boxShadow: "var(--shadow-sm)", width: "fit-content", maxWidth: "100%", overflowX: "auto" }}>
         {tabs.map((tab) => {
           const active = filter === tab.key;
           return (
             <button key={tab.key} onClick={() => setFilter(tab.key)}
-              style={{ padding: "6px 16px", borderRadius: 8, fontSize: 13, fontWeight: active ? 600 : 500, cursor: "pointer", border: "none", fontFamily: "inherit", transition: "all 0.15s", background: active ? "var(--bg-app)" : "transparent", color: active ? "var(--text-primary)" : "var(--text-muted)", boxShadow: active ? "0 1px 2px rgba(0,0,0,0.05)" : "none" }}>
+              style={{ padding: "6px 16px", borderRadius: 8, fontSize: 13, fontWeight: active ? 600 : 500, cursor: "pointer", border: "none", fontFamily: "inherit", transition: "all 0.15s", whiteSpace: "nowrap", flexShrink: 0, background: active ? "var(--bg-app)" : "transparent", color: active ? "var(--text-primary)" : "var(--text-muted)", boxShadow: active ? "0 1px 2px rgba(0,0,0,0.05)" : "none" }}>
               {tab.label}
             </button>
           );
@@ -132,3 +132,5 @@ export default function NotificationsPage() {
     </div>
   );
 }
+
+

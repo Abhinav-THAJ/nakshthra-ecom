@@ -319,7 +319,7 @@ export default function ProductsPage() {
                   />
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <div className="form-grid-2">
                   <div>
                     <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", marginBottom: 4 }}>SKU *</label>
                     <input
@@ -346,7 +346,7 @@ export default function ProductsPage() {
                   </div>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
+                <div className="form-grid-3">
                   <div>
                     <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", marginBottom: 4 }}>Stock *</label>
                     <input
@@ -435,4 +435,6 @@ export default function ProductsPage() {
     </div>
   );
 }
+
+
 

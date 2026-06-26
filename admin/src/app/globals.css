@@ -208,3 +208,10 @@ input, select, textarea {
   .header-right { gap: 6px !important; }
   .profile-btn { padding: 4px !important; gap: 4px !important; }
 }
+
+.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+@media (max-width: 768px) {
+  .form-grid-2 { grid-template-columns: 1fr; }
+  .form-grid-3 { grid-template-columns: 1fr; }
+}

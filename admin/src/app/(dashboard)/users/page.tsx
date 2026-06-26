@@ -123,7 +123,7 @@ export default function UsersPage() {
             const active = roleFilter === r;
             return (
               <button key={r} onClick={() => { setRoleFilter(r); setPage(1); }}
-                style={{ padding: "5px 12px", borderRadius: 7, fontSize: 12, fontWeight: 500, cursor: "pointer", border: "none", fontFamily: "inherit", transition: "all 0.15s", whiteSpace: "nowrap", background: active ? (r === "ALL" ? "var(--gradient)" : cfg?.bg || "var(--bg-app)") : "transparent", color: active ? (r === "ALL" ? "white" : cfg?.color || "var(--text-primary)") : "var(--text-muted)" }}>
+                style={{ padding: "5px 12px", borderRadius: 7, fontSize: 12, fontWeight: 500, cursor: "pointer", border: "none", fontFamily: "inherit", transition: "all 0.15s", whiteSpace: "nowrap", flexShrink: 0, background: active ? (r === "ALL" ? "var(--gradient)" : cfg?.bg || "var(--bg-app)") : "transparent", color: active ? (r === "ALL" ? "white" : cfg?.color || "var(--text-primary)") : "var(--text-muted)" }}>
                 {r === "ALL" ? "All Roles" : r.split("-").map((w) => w[0].toUpperCase() + w.slice(1)).join(" ")}
               </button>
             );
@@ -264,7 +264,7 @@ export default function UsersPage() {
               )}
 
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <div className="form-grid-2">
                   <div>
                     <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", marginBottom: 4 }}>First Name *</label>
                     <input
@@ -369,4 +369,6 @@ export default function UsersPage() {
     </div>
   );
 }
+
+
 

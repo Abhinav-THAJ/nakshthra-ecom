@@ -126,19 +126,19 @@ export default function IntegrationsPage() {
         </div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#fff", border: "1px solid var(--border)", borderRadius: 10, padding: 4, boxShadow: "var(--shadow-sm)", width: "fit-content" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#fff", border: "1px solid var(--border)", borderRadius: 10, padding: 4, boxShadow: "var(--shadow-sm)", width: "fit-content", maxWidth: "100%", overflowX: "auto" }}>
         {["ALL", "courier", "payment", "product", "notification", "analytics"].map((type) => {
           const active = typeFilter === type;
           return (
             <button key={type} onClick={() => setTypeFilter(type)}
-              style={{ padding: "5px 14px", borderRadius: 7, fontSize: 12, fontWeight: 500, cursor: "pointer", border: "none", fontFamily: "inherit", transition: "all 0.15s", background: active ? "var(--bg-app)" : "transparent", color: active ? (type !== "ALL" ? TYPE_COLORS[type] : "var(--text-primary)") : "var(--text-muted)" }}>
+              style={{ padding: "5px 14px", borderRadius: 7, fontSize: 12, fontWeight: 500, cursor: "pointer", border: "none", fontFamily: "inherit", transition: "all 0.15s", whiteSpace: "nowrap", flexShrink: 0, background: active ? "var(--bg-app)" : "transparent", color: active ? (type !== "ALL" ? TYPE_COLORS[type] : "var(--text-primary)") : "var(--text-muted)" }}>
               {type === "ALL" ? "All Types" : type.charAt(0).toUpperCase() + type.slice(1)}
             </button>
           );
         })}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
         {isLoading ? (
           [...Array(6)].map((_, i) => (
             <div key={i} className="card">
@@ -279,7 +279,7 @@ export default function IntegrationsPage() {
                   />
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <div className="form-grid-2">
                   <div>
                     <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", marginBottom: 4 }}>API Key (Optional)</label>
                     <input
@@ -340,3 +340,5 @@ export default function IntegrationsPage() {
     </div>
   );
 }
+
+

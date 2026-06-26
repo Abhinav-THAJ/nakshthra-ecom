@@ -50,13 +50,13 @@ export default function ReviewsPage() {
         <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 2 }}>Manage customer product reviews</p>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#fff", border: "1px solid var(--border)", borderRadius: 10, padding: 4, boxShadow: "var(--shadow-sm)", width: "fit-content" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#fff", border: "1px solid var(--border)", borderRadius: 10, padding: 4, boxShadow: "var(--shadow-sm)", width: "fit-content", maxWidth: "100%", overflowX: "auto" }}>
         {["ALL", "PENDING", "APPROVED", "REJECTED", "FLAGGED"].map((s) => {
           const cfg = STATUS_CONFIG[s as keyof typeof STATUS_CONFIG];
           const active = statusFilter === s;
           return (
             <button key={s} onClick={() => { setStatusFilter(s); setPage(1); }}
-              style={{ padding: "5px 14px", borderRadius: 7, fontSize: 12, fontWeight: 500, cursor: "pointer", border: "none", fontFamily: "inherit", transition: "all 0.15s", background: active ? (s === "ALL" ? "var(--gradient)" : cfg?.bg || "var(--bg-app)") : "transparent", color: active ? (s === "ALL" ? "white" : cfg?.color || "var(--text-primary)") : "var(--text-muted)" }}>
+              style={{ padding: "5px 14px", borderRadius: 7, fontSize: 12, fontWeight: 500, cursor: "pointer", border: "none", fontFamily: "inherit", transition: "all 0.15s", whiteSpace: "nowrap", flexShrink: 0, background: active ? (s === "ALL" ? "var(--gradient)" : cfg?.bg || "var(--bg-app)") : "transparent", color: active ? (s === "ALL" ? "white" : cfg?.color || "var(--text-primary)") : "var(--text-muted)" }}>
               {s === "ALL" ? "All Reviews" : cfg?.label || s}
             </button>
           );
@@ -148,3 +148,5 @@ export default function ReviewsPage() {
     </div>
   );
 }
+
+

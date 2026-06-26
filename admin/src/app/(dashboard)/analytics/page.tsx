@@ -45,7 +45,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* KPI Cards */}
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:16 }}>
+      <div className="dashboard-stats-grid">
         {KPIS.map((kpi, i) => {
           const val = stats?.[kpi.key as keyof typeof stats];
           const change = stats?.[kpi.changeKey as keyof typeof stats] as number|undefined;
@@ -115,7 +115,7 @@ export default function AnalyticsPage() {
       </motion.div>
 
       {/* Bottom Charts */}
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
+      <div className="dashboard-bottom-grid">
         <motion.div className="card" initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{delay:0.15}}>
           <div style={{fontSize:14,fontWeight:700,color:"var(--text-primary)",marginBottom:4}}>Order Status Distribution</div>
           <div style={{fontSize:12,color:"var(--text-muted)",marginBottom:20}}>Breakdown of all orders</div>
@@ -171,3 +171,6 @@ export default function AnalyticsPage() {
     </div>
   );
 }
+
+
+

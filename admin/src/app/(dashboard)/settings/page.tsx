@@ -71,7 +71,7 @@ export default function SettingsPage() {
                 const active = activeSection === section;
                 return (
                   <button key={section} onClick={() => setActiveSection(section)}
-                    style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "9px 12px", borderRadius: 9, marginBottom: 2, border: "none", cursor: "pointer", fontFamily: "inherit", fontSize: 13, fontWeight: active ? 600 : 400, transition: "all 0.15s", background: active ? "var(--gradient)" : "transparent", color: active ? "white" : "var(--text-secondary)", textAlign: "left", boxShadow: active ? "0 4px 12px rgba(212, 175, 55, 0.2)" : "none" }}>
+                    style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "9px 12px", borderRadius: 9, marginBottom: 2, border: "none", cursor: "pointer", fontFamily: "inherit", fontSize: 13, fontWeight: active ? 600 : 400, transition: "all 0.15s", whiteSpace: "nowrap", flexShrink: 0, background: active ? "var(--gradient)" : "transparent", color: active ? "white" : "var(--text-secondary)", textAlign: "left", boxShadow: active ? "0 4px 12px rgba(212, 175, 55, 0.2)" : "none" }}>
                     <Icon size={14} />
                     {section.charAt(0).toUpperCase() + section.slice(1)}
                   </button>
@@ -131,3 +131,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+

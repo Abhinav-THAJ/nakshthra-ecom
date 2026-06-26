@@ -76,7 +76,7 @@ export default function OrdersPage() {
             const st = STATUS_STYLES[s];
             return (
               <button key={s} onClick={() => { setStatus(s); setPage(1); }}
-                style={{ padding: "5px 12px", borderRadius: 7, fontSize: 12, fontWeight: 500, cursor: "pointer", border: "none", fontFamily: "inherit", transition: "all 0.15s", whiteSpace: "nowrap", background: active ? (s === "ALL" ? "var(--gradient)" : st?.bg || "var(--bg-app)") : "transparent", color: active ? (s === "ALL" ? "white" : st?.color || "var(--text-primary)") : "var(--text-muted)" }}>
+                style={{ padding: "5px 12px", borderRadius: 7, fontSize: 12, fontWeight: 500, cursor: "pointer", border: "none", fontFamily: "inherit", transition: "all 0.15s", whiteSpace: "nowrap", flexShrink: 0, background: active ? (s === "ALL" ? "var(--gradient)" : st?.bg || "var(--bg-app)") : "transparent", color: active ? (s === "ALL" ? "white" : st?.color || "var(--text-primary)") : "var(--text-muted)" }}>
                 {s === "ALL" ? "All Orders" : s.charAt(0) + s.slice(1).toLowerCase()}
               </button>
             );
@@ -166,4 +166,6 @@ export default function OrdersPage() {
     </div>
   );
 }
+
+
 

@@ -69,12 +69,12 @@ export default function PaymentsPage() {
         <p style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 2 }}>Manage transactions, refunds, and financial analytics</p>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#fff", border: "1px solid var(--border)", borderRadius: 10, padding: 4, boxShadow: "var(--shadow-sm)", width: "fit-content" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#fff", border: "1px solid var(--border)", borderRadius: 10, padding: 4, boxShadow: "var(--shadow-sm)", width: "fit-content", maxWidth: "100%", overflowX: "auto" }}>
         {tabs.map((tab) => {
           const active = activeTab === tab.key;
           return (
             <button key={tab.key} onClick={() => { setActiveTab(tab.key); setPage(1); setStatusFilter("ALL"); }}
-              style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 16px", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer", border: "none", fontFamily: "inherit", transition: "all 0.15s", background: active ? "var(--bg-app)" : "transparent", color: active ? "var(--text-primary)" : "var(--text-muted)", boxShadow: active ? "0 1px 2px rgba(0,0,0,0.05)" : "none" }}>
+              style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 16px", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer", border: "none", fontFamily: "inherit", transition: "all 0.15s", whiteSpace: "nowrap", flexShrink: 0, background: active ? "var(--bg-app)" : "transparent", color: active ? "var(--text-primary)" : "var(--text-muted)", boxShadow: active ? "0 1px 2px rgba(0,0,0,0.05)" : "none" }}>
               <tab.icon size={15} style={{ color: active ? "var(--brand-600)" : "inherit" }} />
               {tab.label}
             </button>
@@ -95,7 +95,7 @@ export default function PaymentsPage() {
         <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#fff", border: "1px solid var(--border)", borderRadius: 10, padding: 4, boxShadow: "var(--shadow-sm)", overflowX: "auto" }}>
           {["ALL", "PENDING", "COMPLETED", "FAILED", "REFUNDED"].map((s) => (
             <button key={s} onClick={() => { setStatusFilter(s); setPage(1); }}
-              style={{ padding: "5px 12px", borderRadius: 7, fontSize: 12, fontWeight: 500, cursor: "pointer", border: "none", fontFamily: "inherit", transition: "all 0.15s", whiteSpace: "nowrap", background: statusFilter === s ? "var(--bg-app)" : "transparent", color: statusFilter === s ? "var(--text-primary)" : "var(--text-muted)" }}>
+              style={{ padding: "5px 12px", borderRadius: 7, fontSize: 12, fontWeight: 500, cursor: "pointer", border: "none", fontFamily: "inherit", transition: "all 0.15s", whiteSpace: "nowrap", flexShrink: 0, background: statusFilter === s ? "var(--bg-app)" : "transparent", color: statusFilter === s ? "var(--text-primary)" : "var(--text-muted)" }}>
               {s === "ALL" ? "All" : s.charAt(0) + s.slice(1).toLowerCase()}
             </button>
           ))}
@@ -165,4 +165,6 @@ export default function PaymentsPage() {
     </div>
   );
 }
+
+
 
