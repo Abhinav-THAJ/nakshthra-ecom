@@ -2695,3 +2695,15 @@ img { display: block; max-width: 100%; }
     padding-bottom: 8px !important;
   }
 }
+
+/* Mobile Fix: Perfectly center the logo */
+@media (max-width: 768px) {
+  .header-container {
+    position: relative !important;
+  }
+  .logo-container {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+}
