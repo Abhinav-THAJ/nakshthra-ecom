@@ -69,7 +69,7 @@ export function Header() {
           placeholder="Search orders, customers, products..."
           style={{ flex: 1, background: "none", border: "none", outline: "none", fontSize: 13, color: "var(--text-primary)", fontFamily: "inherit" }}
         />
-        <kbd
+        <kbd className="desktop-only"
           style={{
             fontSize: 10,
             color: "var(--text-muted)",
@@ -84,7 +84,7 @@ export function Header() {
         </kbd>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginLeft: "auto" }}>
+      <div className="header-right">
         {/* Notification Bell */}
         <button
           style={{
@@ -146,7 +146,7 @@ export function Header() {
             {user?.avatar && (
               <img src={user.avatar} alt="" style={{ width: 30, height: 30, borderRadius: 8, objectFit: "cover" }} />
             )}
-            <div style={{ textAlign: "left" }}>
+            <div className="profile-text">
               <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.2 }}>
                 {user?.firstName || "Admin"} {user?.lastName || ""}
               </div>
@@ -226,3 +226,4 @@ function DropdownLink({ href, icon: Icon, label, onClick }: { href: string; icon
     </Link>
   );
 }
+

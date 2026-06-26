@@ -192,3 +192,19 @@ input, select, textarea {
 @media (max-width: 768px) {
   .dashboard-stats-grid { grid-template-columns: 1fr; }
 }
+
+/* Header Responsive Fixes */
+.header-search { display: flex; align-items: center; gap: 8px; background: var(--bg-app); border: 1px solid var(--border); border-radius: 10px; padding: 7px 14px; flex: 1; max-width: 360px; min-width: 0; }
+.header-search input { flex: 1; background: none; border: none; outline: none; font-size: 13px; color: var(--text-primary); font-family: inherit; min-width: 0; }
+.header-right { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.profile-text { text-align: left; }
+.desktop-only { display: inline-block; }
+@media (max-width: 768px) {
+  .app-header { padding: 0 12px !important; }
+  .mobile-menu-btn { margin-right: 4px !important; }
+  .header-search { padding: 6px 10px !important; gap: 4px !important; }
+  .desktop-only { display: none !important; }
+  .profile-text { display: none !important; }
+  .header-right { gap: 6px !important; }
+  .profile-btn { padding: 4px !important; gap: 4px !important; }
+}

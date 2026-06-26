@@ -132,8 +132,8 @@ export default function UsersPage() {
       </div>
 
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-        style={{ background: "#fff", border: "1px solid var(--border)", borderRadius: 14, overflow: "hidden", boxShadow: "var(--shadow-card)" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        style={{ background: "#fff", border: "1px solid var(--border)", borderRadius: 14, overflowX: "auto", boxShadow: "var(--shadow-card)" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 900 }}>
           <thead>
             <tr style={{ borderBottom: "1px solid var(--border)", background: "var(--bg-app)" }}>
               {["User", "Email", "Role", "Status", "Last Active", "Joined"].map((h) => (
@@ -369,3 +369,4 @@ export default function UsersPage() {
     </div>
   );
 }
+
