@@ -2585,3 +2585,18 @@ img { display: block; max-width: 100%; }
     box-shadow: 0 1px 0 var(--border-light), var(--shadow-xs) !important;
   }
 }
+
+/* Mobile Fix: Make Trust Bar a 2-column Grid */
+@media (max-width: 768px) {
+  .trust-horizontal-bar {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 20px 10px !important;
+    padding: 24px 20px !important;
+  }
+  .trust-horizontal-item {
+    border-right: none !important;
+    padding: 0 !important;
+    justify-content: flex-start !important;
+  }
+}
