@@ -2671,3 +2671,12 @@ img { display: block; max-width: 100%; }
     margin-bottom: 32px !important;
   }
 }
+
+/* Mobile Fix: Center the last odd item in Promo Banners */
+@media (max-width: 768px) {
+  .promo-slide-row .promo-banner-slide-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1 !important;
+    justify-self: center !important;
+    width: calc(50% - 6px) !important;
+  }
+}
