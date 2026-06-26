@@ -2680,3 +2680,10 @@ img { display: block; max-width: 100%; }
     width: calc(50% - 6px) !important;
   }
 }
+
+/* Mobile Fix: Add gap above Wrapped with Love panel */
+@media (max-width: 768px) {
+  .wrapped-love-panel {
+    margin-top: 24px !important;
+  }
+}
