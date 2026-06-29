@@ -5,6 +5,7 @@ import { Search, MapPin, Heart, ShoppingCart, User, ChevronDown, Menu, X } from 
 import Link from 'next/link';
 import Image from 'next/image';
 import MobileCategories from './MobileCategories';
+import { useRouter } from 'next/navigation';
 
 interface MenuData {
   featured: string[];
@@ -187,6 +188,7 @@ const categoryRoutes: Record<string, string> = {
 };
 
 export default function Header() {
+  const router = useRouter();
   const [pinCode]                                   = useState('682303');
   const [isMenuOpen, setIsMenuOpen]                 = useState(false);
   const [searchQuery, setSearchQuery]               = useState('');
@@ -194,6 +196,14 @@ export default function Header() {
   const [mobileSearchOpen, setMobileSearchOpen]     = useState(false);
   const [mobileSearchQuery, setMobileSearchQuery]   = useState('');
   const mobileInputRef = useRef<HTMLInputElement>(null);
+
+  // Navigate to search results
+  const handleSearch = useCallback((q: string) => {
+    const term = q.trim();
+    if (!term) return;
+    router.push(`/search?q=${encodeURIComponent(term)}`);
+    setMobileSearchOpen(false);
+  }, [router]);
 
   // Timer ref — used to delay closing so mouse can travel into megamenu
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -270,8 +280,9 @@ export default function Header() {
                 placeholder="Search Rings, Earrings, Solitaires, Gold Coins..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch(searchQuery)}
               />
-              <button className="search-btn">
+              <button className="search-btn" onClick={() => handleSearch(searchQuery)}>
                 <Search size={18} color="#ffffff" />
               </button>
             </div>
@@ -490,12 +501,20 @@ export default function Header() {
                 placeholder="Search rings, earrings, gold..."
                 value={mobileSearchQuery}
                 onChange={(e) => setMobileSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch(mobileSearchQuery)}
               />
               {mobileSearchQuery && (
                 <button className="mobile-search-clear" onClick={() => setMobileSearchQuery('')} aria-label="Clear">
                   <X size={16} />
                 </button>
               )}
+              <button
+                className="mobile-search-go-btn"
+                onClick={() => handleSearch(mobileSearchQuery)}
+                aria-label="Search"
+              >
+                <Search size={16} color="#fff" />
+              </button>
             </div>
 
             {/* Category chips */}
@@ -523,7 +542,7 @@ export default function Header() {
                   <button
                     key={i}
                     className="mobile-search-popular-item"
-                    onClick={() => setMobileSearchQuery(term)}
+                    onClick={() => handleSearch(term)}
                   >
                     <Search size={14} />
                     <span>{term}</span>

@@ -2900,3 +2900,110 @@ img { display: block; max-width: 100%; }
   color: #c8b89a;
   flex-shrink: 0;
 }
+
+/* Mobile search go button (inside input row) */
+.mobile-search-go-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--gold-primary);
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s, transform 0.15s;
+}
+.mobile-search-go-btn:hover {
+  background: var(--gold-dark, #a8833d);
+  transform: scale(1.08);
+}
+
+/* ── Search Results Page ── */
+.search-page-wrapper {
+  padding: 40px 0 80px;
+  min-height: 70vh;
+}
+
+.search-page-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.search-page-icon-wrap {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(201, 169, 110, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.search-page-title {
+  font-family: var(--font-primary);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.search-query-highlight {
+  color: var(--gold-primary);
+}
+
+.search-result-count {
+  font-family: var(--font-secondary);
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 32px;
+}
+
+.search-products-grid {
+  margin-top: 24px;
+}
+
+/* Empty state */
+.search-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 64px 24px;
+  gap: 16px;
+}
+
+.search-empty-icon {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: rgba(201, 169, 110, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-empty-title {
+  font-family: var(--font-primary);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.search-empty-sub {
+  font-family: var(--font-secondary);
+  font-size: 15px;
+  color: #888;
+  max-width: 380px;
+}
+
+.search-empty-cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 8px;
+}
