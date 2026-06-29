@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Search, MapPin, Heart, ShoppingCart, User, ChevronDown, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -191,9 +191,28 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen]                 = useState(false);
   const [searchQuery, setSearchQuery]               = useState('');
   const [activeCategory, setActiveCategory]         = useState<string | null>(null);
+  const [mobileSearchOpen, setMobileSearchOpen]     = useState(false);
+  const [mobileSearchQuery, setMobileSearchQuery]   = useState('');
+  const mobileInputRef = useRef<HTMLInputElement>(null);
 
   // Timer ref — used to delay closing so mouse can travel into megamenu
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Focus input when mobile search opens
+  useEffect(() => {
+    if (mobileSearchOpen && mobileInputRef.current) {
+      setTimeout(() => mobileInputRef.current?.focus(), 100);
+    }
+  }, [mobileSearchOpen]);
+
+  // Close on Escape key
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileSearchOpen(false);
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, []);
 
   const handleMouseEnter = useCallback((catName: string) => {
     // Cancel any pending close
@@ -237,10 +256,6 @@ export default function Header() {
       {/* Main Header Row */}
       <div className="main-header">
         <div className="container space-between header-container">
-          {/* Mobile Toggle */}
-          <button className="mobile-toggle hide-lg" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
 
           {/* Logo */}
           <Link href="/" className="logo-container">
@@ -272,6 +287,14 @@ export default function Header() {
               </div>
             </div>
 
+            {/* Mobile Search Icon — only visible on mobile */}
+            <button
+              className="icon-btn flex-center mobile-search-trigger hide-lg"
+              onClick={() => setMobileSearchOpen(true)}
+              aria-label="Open search"
+            >
+              <Search size={20} color="#C9A96E" />
+            </button>
 
             <div className="account-wrapper flex-center">
               <User size={20} color="#C9A96E" />
@@ -440,23 +463,77 @@ export default function Header() {
         </div>
       </nav>
 
-      {/* Mobile Search */}
-      <div className="mobile-search container hide-lg">
-        <div className="search-input-wrapper">
-          <input
-            type="text"
-            placeholder="Search jewelry..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <button className="search-btn">
-            <Search size={16} color="#ffffff" />
-          </button>
-        </div>
-      </div>
+
 
       {/* Mobile Categories Scroll & Submenu Overlay */}
       <MobileCategories categories={categories} menuConfigs={menuConfigs} categoryRoutes={categoryRoutes} />
+
+      {/* Mobile Search Overlay */}
+      {mobileSearchOpen && (
+        <div className="mobile-search-overlay" onClick={(e) => { if (e.target === e.currentTarget) setMobileSearchOpen(false); }}>
+          <div className="mobile-search-panel">
+            {/* Header row */}
+            <div className="mobile-search-header">
+              <span className="mobile-search-title">Search</span>
+              <button className="mobile-search-close" onClick={() => setMobileSearchOpen(false)} aria-label="Close search">
+                <X size={22} />
+              </button>
+            </div>
+
+            {/* Input */}
+            <div className="mobile-search-input-row">
+              <Search size={18} color="#C9A96E" className="mobile-search-icon-left" />
+              <input
+                ref={mobileInputRef}
+                type="text"
+                className="mobile-search-input"
+                placeholder="Search rings, earrings, gold..."
+                value={mobileSearchQuery}
+                onChange={(e) => setMobileSearchQuery(e.target.value)}
+              />
+              {mobileSearchQuery && (
+                <button className="mobile-search-clear" onClick={() => setMobileSearchQuery('')} aria-label="Clear">
+                  <X size={16} />
+                </button>
+              )}
+            </div>
+
+            {/* Category chips */}
+            <div className="mobile-search-categories">
+              <p className="mobile-search-categories-label">Browse Categories</p>
+              <div className="mobile-search-chips">
+                {categories.map((cat, i) => (
+                  <Link
+                    key={i}
+                    href={cat.href}
+                    className="mobile-search-chip"
+                    onClick={() => setMobileSearchOpen(false)}
+                  >
+                    {cat.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Popular searches */}
+            <div className="mobile-search-popular">
+              <p className="mobile-search-categories-label">Popular Searches</p>
+              <div className="mobile-search-popular-list">
+                {['Diamond Rings', 'Gold Earrings', 'Solitaire', 'Mangalsutra', 'Bangles', 'Pendants'].map((term, i) => (
+                  <button
+                    key={i}
+                    className="mobile-search-popular-item"
+                    onClick={() => setMobileSearchQuery(term)}
+                  >
+                    <Search size={14} />
+                    <span>{term}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
