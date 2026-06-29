@@ -3007,3 +3007,192 @@ img { display: block; max-width: 100%; }
   justify-content: center;
   margin-top: 8px;
 }
+
+/* ═══════════════════════════════════════════
+   SEARCH SUGGESTIONS DROPDOWN (Desktop)
+═══════════════════════════════════════════ */
+.search-bar-container {
+  position: relative;
+}
+
+.search-suggestions-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #ede5d6;
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  z-index: 9999;
+  overflow: hidden;
+  animation: sugDropIn 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes sugDropIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.sug-section {
+  padding: 10px 0 4px;
+  border-bottom: 1px solid #f5ede0;
+}
+.sug-section:last-of-type { border-bottom: none; }
+
+.sug-label {
+  font-family: var(--font-primary);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #b0a090;
+  padding: 0 16px;
+  margin-bottom: 4px;
+}
+
+/* Shared item base */
+.sug-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  text-decoration: none;
+  color: var(--dark);
+  font-family: var(--font-secondary);
+  font-size: 14px;
+  transition: background 0.13s;
+}
+.sug-item:hover,
+.sug-highlighted {
+  background: #fdf8f0 !important;
+}
+
+/* Category chip style */
+.sug-category .sug-cat-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: rgba(201,169,110,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-primary);
+  flex-shrink: 0;
+}
+.sug-arrow {
+  margin-left: auto;
+  color: #c8b89a;
+  font-size: 16px;
+}
+
+/* Product row */
+.sug-product {
+  gap: 10px;
+}
+.sug-item-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  color: var(--dark);
+}
+.sug-item-sub {
+  font-size: 12px;
+  color: #b0a090;
+  white-space: nowrap;
+}
+
+/* Footer */
+.sug-footer {
+  padding: 10px 16px;
+  background: #fdf8f0;
+  border-top: 1px solid #ede5d6;
+}
+.sug-all-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-secondary);
+  font-size: 13px;
+  color: var(--gold-primary);
+  padding: 0;
+  text-align: left;
+  transition: opacity 0.15s;
+}
+.sug-all-btn:hover { opacity: 0.75; }
+.sug-all-btn strong { font-weight: 600; }
+
+/* ═══════════════════════════════════════════
+   MOBILE LIVE SUGGESTIONS LIST
+═══════════════════════════════════════════ */
+.mobile-sug-list {
+  border: 1px solid #ede5d6;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  background: #fff;
+  animation: sugDropIn 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mobile-sug-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #f5ede0;
+  cursor: pointer;
+  text-align: left;
+  text-decoration: none;
+  color: var(--dark);
+  transition: background 0.13s;
+}
+.mobile-sug-item:last-child { border-bottom: none; }
+.mobile-sug-item:hover { background: #fdf8f0; }
+
+.mobile-sug-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(201,169,110,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobile-sug-name {
+  display: block;
+  font-family: var(--font-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+
+.mobile-sug-type {
+  display: block;
+  font-family: var(--font-secondary);
+  font-size: 11px;
+  color: #b0a090;
+  margin-top: 1px;
+}
+
+.mobile-sug-arrow {
+  margin-left: auto;
+  font-size: 20px;
+  color: #c8b89a;
+  line-height: 1;
+}

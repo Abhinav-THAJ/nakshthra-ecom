@@ -1,11 +1,16 @@
 'use client';
 
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Search, MapPin, Heart, ShoppingCart, User, ChevronDown, Menu, X } from 'lucide-react';
+import { Search, MapPin, Heart, ShoppingCart, User, X, Tag } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import MobileCategories from './MobileCategories';
 import { useRouter } from 'next/navigation';
+
+interface Suggestion {
+  products: { id: string; name: string; price: number; category: string }[];
+  categories: { slug: string; label: string }[];
+}
 
 interface MenuData {
   featured: string[];
@@ -191,19 +196,72 @@ export default function Header() {
   const router = useRouter();
   const [pinCode]                                   = useState('682303');
   const [isMenuOpen, setIsMenuOpen]                 = useState(false);
-  const [searchQuery, setSearchQuery]               = useState('');
   const [activeCategory, setActiveCategory]         = useState<string | null>(null);
   const [mobileSearchOpen, setMobileSearchOpen]     = useState(false);
+
+  // ── Desktop search ──
+  const [searchQuery, setSearchQuery]               = useState('');
+  const [suggestions, setSuggestions]               = useState<Suggestion | null>(null);
+  const [showSuggestions, setShowSuggestions]       = useState(false);
+  const [highlightedIdx, setHighlightedIdx]         = useState(-1);
+  const desktopSearchRef                            = useRef<HTMLDivElement>(null);
+  const debounceTimer                               = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // ── Mobile search ──
   const [mobileSearchQuery, setMobileSearchQuery]   = useState('');
-  const mobileInputRef = useRef<HTMLInputElement>(null);
+  const [mobileSuggestions, setMobileSuggestions]   = useState<Suggestion | null>(null);
+  const mobileInputRef                              = useRef<HTMLInputElement>(null);
+  const mobileDebounce                              = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Navigate to search results
   const handleSearch = useCallback((q: string) => {
     const term = q.trim();
     if (!term) return;
     router.push(`/search?q=${encodeURIComponent(term)}`);
+    setShowSuggestions(false);
     setMobileSearchOpen(false);
+    setSuggestions(null);
+    setMobileSuggestions(null);
   }, [router]);
+
+  // Fetch suggestions (desktop)
+  const fetchSuggestions = useCallback((q: string) => {
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    if (q.trim().length < 2) { setSuggestions(null); setShowSuggestions(false); return; }
+    debounceTimer.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/search/suggestions?q=${encodeURIComponent(q)}`);
+        const data: Suggestion = await res.json();
+        setSuggestions(data);
+        setShowSuggestions(true);
+        setHighlightedIdx(-1);
+      } catch { /* ignore */ }
+    }, 220);
+  }, []);
+
+  // Fetch suggestions (mobile)
+  const fetchMobileSuggestions = useCallback((q: string) => {
+    if (mobileDebounce.current) clearTimeout(mobileDebounce.current);
+    if (q.trim().length < 2) { setMobileSuggestions(null); return; }
+    mobileDebounce.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/search/suggestions?q=${encodeURIComponent(q)}`);
+        const data: Suggestion = await res.json();
+        setMobileSuggestions(data);
+      } catch { /* ignore */ }
+    }, 220);
+  }, []);
+
+  // Close suggestions on outside click
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (desktopSearchRef.current && !desktopSearchRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
 
   // Timer ref — used to delay closing so mouse can travel into megamenu
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -213,16 +271,46 @@ export default function Header() {
     if (mobileSearchOpen && mobileInputRef.current) {
       setTimeout(() => mobileInputRef.current?.focus(), 100);
     }
+    if (!mobileSearchOpen) { setMobileSuggestions(null); setMobileSearchQuery(''); }
   }, [mobileSearchOpen]);
 
   // Close on Escape key
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setMobileSearchOpen(false);
+      if (e.key === 'Escape') { setMobileSearchOpen(false); setShowSuggestions(false); }
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
   }, []);
+
+  // Build flat suggestion list for keyboard navigation
+  const flatSuggestions = [
+    ...(suggestions?.categories.map(c => ({ type: 'category' as const, label: c.label, href: `/${c.slug}` })) ?? []),
+    ...(suggestions?.products.map(p => ({ type: 'product' as const, label: p.name, sub: p.category, query: p.name })) ?? []),
+  ];
+
+  const handleDesktopKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      if (highlightedIdx >= 0 && flatSuggestions[highlightedIdx]) {
+        const item = flatSuggestions[highlightedIdx];
+        if (item.type === 'category') router.push(item.href);
+        else handleSearch(item.query ?? item.label);
+        setShowSuggestions(false);
+      } else {
+        handleSearch(searchQuery);
+      }
+      return;
+    }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setHighlightedIdx(i => Math.min(i + 1, flatSuggestions.length - 1));
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setHighlightedIdx(i => Math.max(i - 1, -1));
+    }
+    if (e.key === 'Escape') setShowSuggestions(false);
+  };
 
   const handleMouseEnter = useCallback((catName: string) => {
     // Cancel any pending close
@@ -273,19 +361,77 @@ export default function Header() {
           </Link>
 
           {/* Search */}
-          <div className="search-bar-container hide-md">
+          <div className="search-bar-container hide-md" ref={desktopSearchRef}>
             <div className="search-input-wrapper">
               <input
                 type="text"
                 placeholder="Search Rings, Earrings, Solitaires, Gold Coins..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch(searchQuery)}
+                autoComplete="off"
+                onChange={(e) => { setSearchQuery(e.target.value); fetchSuggestions(e.target.value); }}
+                onFocus={() => { if (suggestions && searchQuery.length >= 2) setShowSuggestions(true); }}
+                onKeyDown={handleDesktopKeyDown}
               />
               <button className="search-btn" onClick={() => handleSearch(searchQuery)}>
                 <Search size={18} color="#ffffff" />
               </button>
             </div>
+
+            {/* ── Suggestions Dropdown ── */}
+            {showSuggestions && suggestions && (suggestions.products.length > 0 || suggestions.categories.length > 0) && (
+              <div className="search-suggestions-dropdown">
+                {/* Category matches */}
+                {suggestions.categories.length > 0 && (
+                  <div className="sug-section">
+                    <p className="sug-label">Categories</p>
+                    {suggestions.categories.map((cat, i) => {
+                      const idx = i;
+                      return (
+                        <Link
+                          key={cat.slug}
+                          href={`/${cat.slug}`}
+                          className={`sug-item sug-category${highlightedIdx === idx ? ' sug-highlighted' : ''}`}
+                          onClick={() => setShowSuggestions(false)}
+                          onMouseEnter={() => setHighlightedIdx(idx)}
+                        >
+                          <span className="sug-cat-icon"><Tag size={13} /></span>
+                          <span className="sug-item-text">{cat.label}</span>
+                          <span className="sug-arrow">→</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Product matches */}
+                {suggestions.products.length > 0 && (
+                  <div className="sug-section">
+                    <p className="sug-label">Products</p>
+                    {suggestions.products.map((prod, i) => {
+                      const idx = (suggestions?.categories.length ?? 0) + i;
+                      return (
+                        <button
+                          key={prod.id}
+                          className={`sug-item sug-product${highlightedIdx === idx ? ' sug-highlighted' : ''}`}
+                          onMouseEnter={() => setHighlightedIdx(idx)}
+                          onClick={() => { handleSearch(prod.name); }}
+                        >
+                          <Search size={13} color="#c8b89a" />
+                          <span className="sug-item-text">{prod.name}</span>
+                          <span className="sug-item-sub">in {prod.category}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                <div className="sug-footer">
+                  <button className="sug-all-btn" onClick={() => { handleSearch(searchQuery); }}>
+                    See all results for &ldquo;<strong>{searchQuery}</strong>&rdquo;
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Utility Icons */}
@@ -499,12 +645,13 @@ export default function Header() {
                 type="text"
                 className="mobile-search-input"
                 placeholder="Search rings, earrings, gold..."
+                autoComplete="off"
                 value={mobileSearchQuery}
-                onChange={(e) => setMobileSearchQuery(e.target.value)}
+                onChange={(e) => { setMobileSearchQuery(e.target.value); fetchMobileSuggestions(e.target.value); }}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch(mobileSearchQuery)}
               />
               {mobileSearchQuery && (
-                <button className="mobile-search-clear" onClick={() => setMobileSearchQuery('')} aria-label="Clear">
+                <button className="mobile-search-clear" onClick={() => { setMobileSearchQuery(''); setMobileSuggestions(null); }} aria-label="Clear">
                   <X size={16} />
                 </button>
               )}
@@ -516,6 +663,40 @@ export default function Header() {
                 <Search size={16} color="#fff" />
               </button>
             </div>
+
+            {/* ── Mobile live suggestions ── */}
+            {mobileSuggestions && (mobileSuggestions.products.length > 0 || mobileSuggestions.categories.length > 0) && (
+              <div className="mobile-sug-list">
+                {mobileSuggestions.categories.map(cat => (
+                  <Link
+                    key={cat.slug}
+                    href={`/${cat.slug}`}
+                    className="mobile-sug-item"
+                    onClick={() => setMobileSearchOpen(false)}
+                  >
+                    <span className="mobile-sug-icon"><Tag size={14} color="#C9A96E" /></span>
+                    <div>
+                      <span className="mobile-sug-name">{cat.label}</span>
+                      <span className="mobile-sug-type">Category</span>
+                    </div>
+                    <span className="mobile-sug-arrow">›</span>
+                  </Link>
+                ))}
+                {mobileSuggestions.products.map(prod => (
+                  <button
+                    key={prod.id}
+                    className="mobile-sug-item"
+                    onClick={() => handleSearch(prod.name)}
+                  >
+                    <span className="mobile-sug-icon"><Search size={14} color="#c8b89a" /></span>
+                    <div>
+                      <span className="mobile-sug-name">{prod.name}</span>
+                      <span className="mobile-sug-type">₹{prod.price.toLocaleString('en-IN')} · {prod.category}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
 
             {/* Category chips */}
             <div className="mobile-search-categories">
