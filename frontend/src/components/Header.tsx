@@ -355,6 +355,20 @@ export default function Header() {
       <div className="main-header">
         <div className="container space-between header-container">
 
+          {/* Mobile Left Icons (Search + User) */}
+          <div className="mobile-left-icons flex hide-lg">
+            <button
+              className="icon-btn flex-center mobile-search-trigger"
+              onClick={() => setMobileSearchOpen(true)}
+              aria-label="Open search"
+            >
+              <Search size={20} color="#C9A96E" />
+            </button>
+            <div className="icon-btn flex-center">
+              <User size={20} color="#C9A96E" />
+            </div>
+          </div>
+
           {/* Logo */}
           <Link href="/" className="logo-container">
             <Image src="/logo.png" alt="Nakshathra Gold & Diamonds" width={100} height={85} className="logo-image" priority />
@@ -444,18 +458,11 @@ export default function Header() {
               </div>
             </div>
 
-            {/* Mobile Search Icon — only visible on mobile */}
-            <button
-              className="icon-btn flex-center mobile-search-trigger hide-lg"
-              onClick={() => setMobileSearchOpen(true)}
-              aria-label="Open search"
-            >
-              <Search size={20} color="#C9A96E" />
-            </button>
 
-            <div className="account-wrapper flex-center">
+
+            <div className="account-wrapper flex-center hide-md">
               <User size={20} color="#C9A96E" />
-              <span className="hide-md">Login/Signup</span>
+              <span>Login/Signup</span>
             </div>
 
             <Link href="#wishlist" className="icon-btn flex-center">

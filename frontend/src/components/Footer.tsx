@@ -85,9 +85,7 @@ export default function Footer() {
       <div className="footer-bottom">
         <div className="container space-between bottom-container">
           <p>© 2026 Nakshathra Gold and Diamonds. All Rights Reserved.</p>
-          <div className="tata-tagline">
-            <span>A TATA Product Replica</span>
-          </div>
+
         </div>
       </div>
     </footer>
