@@ -9,7 +9,6 @@ export default function HeroSlider() {
   // You can replace these image paths with the actual filenames of the banners you provided
   // Please make sure to save the uploaded images into the "frontend/public" directory.
   const slides = [
-    { image: '/banner1.jpg', link: '#shop' },
     { image: '/banner2.jpg', link: '#shop' },
     { image: '/banner3.jpg', link: '#shop' }
   ];
