@@ -48,7 +48,6 @@ export default function Footer() {
         <div className="footer-column">
           <h4>Useful Links</h4>
           <ul>
-            <li><Link href="#services">Free Try At Home</Link></li>
             <li><Link href="#rates">Local Gold Rates</Link></li>
             <li><Link href="#stores">Find a Store</Link></li>
             <li><Link href="#points">xCLusive Points</Link></li>

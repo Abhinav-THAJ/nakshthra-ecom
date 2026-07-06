@@ -4,11 +4,6 @@ import { Home, RefreshCw, Award, ShieldCheck, HeartHandshake } from 'lucide-reac
 export default function AdvantageSection() {
   const items = [
     {
-      icon: <Home size={32} color="#a88a48" />,
-      title: 'Free Try at Home',
-      desc: 'Book a free appointment. Our jewelry experts will visit you at home.'
-    },
-    {
       icon: <RefreshCw size={32} color="#a88a48" />,
       title: '15-Day Money Back',
       desc: 'Love it or return it. 100% refund within 15 days, no questions asked.'

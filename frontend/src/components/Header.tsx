@@ -5,6 +5,7 @@ import { Search, MapPin, Heart, ShoppingCart, User, X, Tag } from 'lucide-react'
 import Link from 'next/link';
 import Image from 'next/image';
 import MobileCategories from './MobileCategories';
+import AuthModal from './AuthModal';
 import { useRouter } from 'next/navigation';
 
 interface Suggestion {
@@ -196,6 +197,7 @@ export default function Header() {
   const router = useRouter();
   const [pinCode]                                   = useState('682303');
   const [isMenuOpen, setIsMenuOpen]                 = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen]       = useState(false);
   const [activeCategory, setActiveCategory]         = useState<string | null>(null);
   const [mobileSearchOpen, setMobileSearchOpen]     = useState(false);
 
@@ -364,7 +366,7 @@ export default function Header() {
             >
               <Search size={20} color="#C9A96E" />
             </button>
-            <div className="icon-btn flex-center">
+            <div className="icon-btn flex-center" onClick={() => setIsAuthModalOpen(true)} style={{ cursor: 'pointer' }}>
               <User size={20} color="#C9A96E" />
             </div>
           </div>
@@ -460,7 +462,7 @@ export default function Header() {
 
 
 
-            <div className="account-wrapper flex-center hide-md">
+            <div className="account-wrapper flex-center hide-md" onClick={() => setIsAuthModalOpen(true)} style={{ cursor: 'pointer' }}>
               <User size={20} color="#C9A96E" />
               <span>Login/Signup</span>
             </div>
@@ -621,9 +623,6 @@ export default function Header() {
             ))}
           </ul>
 
-          <div className="nav-services hide-md">
-            <Link href="#services" className="services-link">Free Try At Home</Link>
-          </div>
         </div>
       </nav>
 
@@ -741,6 +740,9 @@ export default function Header() {
           </div>
         </div>
       )}
+
+      {/* Auth Modal Overlay */}
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </header>
   );
 }

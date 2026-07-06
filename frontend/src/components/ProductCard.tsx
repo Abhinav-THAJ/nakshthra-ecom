@@ -37,10 +37,6 @@ export default function ProductCard({
         </button>
 
         <img src={image} alt={name} className="product-image" />
-        
-        <div className="try-at-home-bar">
-          <span>Book Try At Home</span>
-        </div>
       </div>
 
       {/* Product Information */}

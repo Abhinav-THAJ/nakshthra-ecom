@@ -216,7 +216,6 @@ export default function CategoryPageTemplate({
                         <Heart size={17} color="#888" />
                       </button>
                       <img src={prod.image} alt={prod.name} />
-                      <div className="try-at-home-bar">Book Try At Home</div>
                     </div>
                     <div className="product-info">
                       <div className="rating-row flex">
