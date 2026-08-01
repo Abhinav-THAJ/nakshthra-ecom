@@ -9,8 +9,9 @@ export default function HeroSlider() {
   // You can replace these image paths with the actual filenames of the banners you provided
   // Please make sure to save the uploaded images into the "frontend/public" directory.
   const slides = [
-    { image: '/banner2.jpg', link: '#shop' },
-    { image: '/banner3.jpg', link: '#shop' }
+    { image: '/banners/banner1.png', link: '#shop' },
+    { image: '/banners/banner2.png', link: '#shop' },
+    { image: '/banners/banner3.jpg', link: '#shop' }
   ];
 
   const nextSlide = () => {
@@ -37,11 +38,11 @@ export default function HeroSlider() {
             key={idx} 
             className={`slide-item ${currentSlide === idx ? 'active' : ''}`}
           >
-            <a href={slide.link} style={{ display: 'block', width: '100%', height: '100%' }}>
+            <a href={slide.link} style={{ display: 'block', width: '100%', lineHeight: 0 }}>
               <img 
                 src={slide.image} 
                 alt="Banner" 
-                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
+                style={{ width: '100%', height: 'auto', display: 'block' }}
                 className="slide-image-bg-img"
               />
             </a>
