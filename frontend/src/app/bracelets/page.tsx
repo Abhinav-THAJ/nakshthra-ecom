@@ -24,7 +24,8 @@ export default async function BraceletsPage() {
 
   // Combine DB products with hardcoded mock products for this category
   const hardcodedBracelets = mockProducts.filter(p => p.categoryId === 'bracelets');
-  const allProducts = [...hardcodedBracelets, ...products];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const allProducts = [...hardcodedBracelets, ...products] as any[];
 
   return (
     <CategoryPageTemplate

@@ -23,7 +23,8 @@ export default async function EarringsPage() {
   }));
 
   const hardcoded = mockProducts.filter(p => p.categoryId === 'earrings');
-  const allProducts = [...hardcoded, ...products];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const allProducts = [...hardcoded, ...products] as any[];
 
   return (
     <CategoryPageTemplate

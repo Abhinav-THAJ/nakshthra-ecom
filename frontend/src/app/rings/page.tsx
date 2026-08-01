@@ -23,7 +23,8 @@ export default async function RingsPage() {
   }));
 
   const hardcoded = mockProducts.filter(p => p.categoryId === 'rings');
-  const allProducts = [...hardcoded, ...products];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const allProducts = [...hardcoded, ...products] as any[];
 
   return (
     <CategoryPageTemplate
