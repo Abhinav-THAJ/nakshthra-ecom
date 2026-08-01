@@ -6,8 +6,8 @@ export interface Product {
   oldPrice?: number;
   image: string;
   images?: string[];
-  rating?: number;
-  reviews?: number;
+  rating: number;
+  reviews: number;
   deliveryTime?: string;
   isNew?: boolean;
   categoryId: string;
