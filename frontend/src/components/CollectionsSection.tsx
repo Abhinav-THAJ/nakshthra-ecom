@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 interface Product {
   name: string;
   price: number;
-  oldPrice: number;
+  oldPrice?: number;
   img: string;
 }
 
@@ -133,7 +133,7 @@ export default function CollectionsSection({ weddingProducts = [] }: Collections
                   <div className="info-box">
                     <div className="price flex">
                       <span className="current">₹{prod.price.toLocaleString('en-IN')}</span>
-                      <span className="old">₹{prod.oldPrice.toLocaleString('en-IN')}</span>
+                      {prod.oldPrice && <span className="old">₹{prod.oldPrice.toLocaleString('en-IN')}</span>}
                     </div>
                     <h4 className="title">{prod.name}</h4>
                   </div>

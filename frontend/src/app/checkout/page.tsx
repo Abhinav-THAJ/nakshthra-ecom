@@ -91,7 +91,7 @@ export default function CheckoutPage() {
           <div className="checkout-steps">
             <div className={`step ${step === 'details' ? 'active' : 'done'}`}>1. Delivery Details</div>
             <div className="step-sep">›</div>
-            <div className={`step ${step === 'payment' ? 'active' : step === 'success' ? 'done' : ''}`}>2. Payment</div>
+            <div className={`step ${step === 'payment' ? 'active' : ''}`}>2. Payment</div>
           </div>
 
           <div className="checkout-layout">
