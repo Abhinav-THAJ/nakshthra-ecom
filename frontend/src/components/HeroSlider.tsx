@@ -1,62 +1,24 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React from 'react';
 
 export default function HeroSlider() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  // You can replace these image paths with the actual filenames of the banners you provided
-  // Please make sure to save the uploaded images into the "frontend/public" directory.
-  const slides = [
-    { image: '/banners/banner1.png', link: '#shop' },
-    { image: '/banners/banner2.png', link: '#shop' },
-    { image: '/banners/banner3.jpg', link: '#shop' }
-  ];
-
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
-  };
-
-  useEffect(() => {
-    const slideInterval = setInterval(nextSlide, 8000);
-    return () => clearInterval(slideInterval);
-  }, []);
+  const banner = { image: '/banners/banner1.png', link: '#shop' };
 
   return (
     <div className="hero-slider-container">
-      <div 
-        className="slides-wrapper" 
-        style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-      >
-        {slides.map((slide, idx) => (
-          <div 
-            key={idx} 
-            className={`slide-item ${currentSlide === idx ? 'active' : ''}`}
-          >
-            <a href={slide.link} style={{ display: 'block', width: '100%', lineHeight: 0 }}>
-              <img 
-                src={slide.image} 
-                alt="Banner" 
-                style={{ width: '100%', height: 'auto', display: 'block' }}
-                className="slide-image-bg-img"
-              />
-            </a>
-          </div>
-        ))}
+      <div className="slides-wrapper">
+        <div className="slide-item active">
+          <a href={banner.link} style={{ display: 'block', width: '100%', lineHeight: 0 }}>
+            <img 
+              src={banner.image} 
+              alt="Banner" 
+              style={{ width: '100%', height: 'auto', display: 'block' }}
+              className="slide-image-bg-img"
+            />
+          </a>
+        </div>
       </div>
-
-      {/* Slide Navigation - Circle pills centered on the edges */}
-      <button className="slider-edge-nav-btn prev" onClick={prevSlide} aria-label="Previous slide">
-        <ChevronLeft size={28} color="#555555" />
-      </button>
-      <button className="slider-edge-nav-btn next" onClick={nextSlide} aria-label="Next slide">
-        <ChevronRight size={28} color="#555555" />
-      </button>
 
       {/* Floating WhatsApp button on bottom right */}
       <a
