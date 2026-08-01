@@ -12,8 +12,8 @@ interface Product {
   price: number;
   oldPrice?: number;
   image: string;
-  rating: number;
-  reviews: number;
+  rating?: number;
+  reviews?: number;
   isNew?: boolean;
   isBestseller?: boolean;
   metal?: string;
@@ -220,10 +220,10 @@ export default function CategoryPageTemplate({
                     <div className="product-info">
                       <div className="rating-row flex">
                         <div className="rating-box flex-center">
-                          <span>{prod.rating}</span>
+                          <span>{prod.rating ?? 4.8}</span>
                           <Star size={11} fill="#ffb300" color="#ffb300" />
                         </div>
-                        <span className="reviews-text">({prod.reviews} reviews)</span>
+                        <span className="reviews-text">({prod.reviews ?? 12} reviews)</span>
                       </div>
                       <h3 className="product-title">{prod.name}</h3>
                       <div className="price-row flex">
