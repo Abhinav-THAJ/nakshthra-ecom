@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Preloader from "../components/Preloader";
+import { CartProvider } from "@/context/CartContext";
 
 export const metadata: Metadata = {
   title: "Nakshathra Gold and Diamonds | Best Store for Online Jewellery Shopping",
@@ -16,9 +17,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Preloader />
-        {children}
+        <CartProvider>
+          <Preloader />
+          {children}
+        </CartProvider>
       </body>
     </html>
   );
 }
+

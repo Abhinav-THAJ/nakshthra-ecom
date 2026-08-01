@@ -1,5 +1,6 @@
 import CategoryPageTemplate from '@/components/CategoryPageTemplate';
 import { prisma } from '@/lib/prisma';
+import { mockProducts } from '@/data/mockProducts';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,6 +22,9 @@ export default async function NecklacesPage() {
     deliveryTime: 'Tomorrow'
   }));
 
+  const hardcoded = mockProducts.filter(p => p.categoryId === 'necklaces');
+  const allProducts = [...hardcoded, ...products];
+
   return (
     <CategoryPageTemplate
       categoryName="Necklaces & Pendants"
@@ -28,7 +32,7 @@ export default async function NecklacesPage() {
       breadcrumb={['Jewellery']}
       subtitle="From delicate pendants to statement chokers — stunning necklaces for every occasion"
       bannerImage="/col_kaashika.png"
-      products={products}
+      products={allProducts}
     />
   );
 }

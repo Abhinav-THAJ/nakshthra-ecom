@@ -1,5 +1,8 @@
+"use client";
+
 import React from 'react';
 import { Heart, Star } from 'lucide-react';
+import Link from 'next/link';
 
 interface ProductCardProps {
   id: string;
@@ -14,6 +17,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({
+  id,
   name,
   price,
   oldPrice,
@@ -27,43 +31,45 @@ export default function ProductCard({
 
   return (
     <div className="product-card-wrapper">
-      {/* Product Image Box */}
-      <div className="product-image-box">
-        {isNew && <span className="badge new-badge">NEW</span>}
-        {discount > 0 && <span className="badge discount-badge">Flat {discount}% Off</span>}
-        
-        <button className="wishlist-btn-card">
-          <Heart size={18} color="#888888" />
-        </button>
+      <Link href={`/product/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        {/* Product Image Box */}
+        <div className="product-image-box">
+          {isNew && <span className="badge new-badge">NEW</span>}
+          {discount > 0 && <span className="badge discount-badge">Flat {discount}% Off</span>}
+          
+          <button className="wishlist-btn-card" onClick={(e) => e.preventDefault()}>
+            <Heart size={18} color="#888888" />
+          </button>
 
-        <img src={image} alt={name} className="product-image" />
-      </div>
+          <img src={image} alt={name} className="product-image" />
+        </div>
 
-      {/* Product Information */}
-      <div className="product-info">
-        <div className="rating-row flex">
-          <div className="rating-box flex-center">
-            <span>{rating}</span>
-            <Star size={12} fill="#ffb300" color="#ffb300" />
+        {/* Product Information */}
+        <div className="product-info">
+          <div className="rating-row flex">
+            <div className="rating-box flex-center">
+              <span>{rating}</span>
+              <Star size={12} fill="#ffb300" color="#ffb300" />
+            </div>
+            <span className="reviews-text">({reviews} reviews)</span>
           </div>
-          <span className="reviews-text">({reviews} reviews)</span>
+
+          <h3 className="product-title">{name}</h3>
+
+          <div className="price-row flex">
+            <span className="current-price">₹{price.toLocaleString('en-IN')}</span>
+            {oldPrice && <span className="old-price">₹{oldPrice.toLocaleString('en-IN')}</span>}
+          </div>
+
+          <div className="delivery-row">
+            <p>Express Delivery: <span>{deliveryTime}</span></p>
+          </div>
+
+          <button className="add-to-cart-btn-card" onClick={(e) => { e.preventDefault(); console.log('Add to cart clicked'); }}>
+            Add to Cart
+          </button>
         </div>
-
-        <h3 className="product-title">{name}</h3>
-
-        <div className="price-row flex">
-          <span className="current-price">₹{price.toLocaleString('en-IN')}</span>
-          {oldPrice && <span className="old-price">₹{oldPrice.toLocaleString('en-IN')}</span>}
-        </div>
-
-        <div className="delivery-row">
-          <p>Express Delivery: <span>{deliveryTime}</span></p>
-        </div>
-
-        <button className="add-to-cart-btn-card">
-          Add to Cart
-        </button>
-      </div>
+      </Link>
     </div>
   );
 }

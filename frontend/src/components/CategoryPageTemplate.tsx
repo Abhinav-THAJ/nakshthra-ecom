@@ -205,14 +205,14 @@ export default function CategoryPageTemplate({
                   ? Math.round(((prod.oldPrice - prod.price) / prod.oldPrice) * 100)
                   : 0;
                 return (
-                  <div key={prod.id} className="product-card-wrapper">
+                  <Link key={prod.id} href={`/product/${prod.id}`} className="product-card-wrapper" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
                     <div className="product-image-box">
                       {prod.isNew && <span className="badge new-badge">NEW</span>}
                       {discount > 0 && <span className="badge discount-badge">Flat {discount}% Off</span>}
                       {prod.isBestseller && !prod.isNew && (
                         <span className="badge bestseller-badge">Bestseller</span>
                       )}
-                      <button className="wishlist-btn-card">
+                      <button className="wishlist-btn-card" onClick={(e) => e.preventDefault()}>
                         <Heart size={17} color="#888" />
                       </button>
                       <img src={prod.image} alt={prod.name} />
@@ -235,9 +235,9 @@ export default function CategoryPageTemplate({
                       <div className="delivery-row">
                         <p>Express Delivery: <span>{prod.deliveryTime ?? 'Tomorrow'}</span></p>
                       </div>
-                      <button className="add-to-cart-btn-card">Add to Cart</button>
+                      <button className="add-to-cart-btn-card" onClick={(e) => e.preventDefault()}>Add to Cart</button>
                     </div>
-                  </div>
+                  </Link>
                 );
               })}
             </div>

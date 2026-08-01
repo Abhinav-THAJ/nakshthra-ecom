@@ -1,5 +1,6 @@
 import CategoryPageTemplate from '@/components/CategoryPageTemplate';
 import { prisma } from '@/lib/prisma';
+import { mockProducts } from '@/data/mockProducts';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,6 +22,9 @@ export default async function RingsPage() {
     deliveryTime: 'Tomorrow'
   }));
 
+  const hardcoded = mockProducts.filter(p => p.categoryId === 'rings');
+  const allProducts = [...hardcoded, ...products];
+
   return (
     <CategoryPageTemplate
       categoryName="Rings"
@@ -28,7 +32,7 @@ export default async function RingsPage() {
       breadcrumb={['Jewellery']}
       subtitle="Explore our stunning collection of gold, platinum & diamond rings"
       bannerImage="/product_ring.png"
-      products={products}
+      products={allProducts}
     />
   );
 }

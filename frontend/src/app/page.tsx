@@ -6,94 +6,75 @@ import ProductCard from '@/components/ProductCard';
 import AdvantageSection from '@/components/AdvantageSection';
 import CollectionsSection from '@/components/CollectionsSection';
 import Footer from '@/components/Footer';
-import { prisma } from '@/lib/prisma';
+import { mockProducts, Product } from '@/data/mockProducts';
 
-export const dynamic = 'force-dynamic'; // Ensure we fetch fresh data from the database
+// Helper to get mixed products from different categories
+const getMixedProducts = (products: Product[], count: number, skip: number = 0) => {
+  const mixed: Product[] = [];
+  const categories = Array.from(new Set(products.map(p => p.categoryId)));
+  let index = skip;
+  // Fallback counter to prevent infinite loops just in case
+  let loops = 0;
+  
+  while (mixed.length < count && loops < 100) {
+    let addedInThisLoop = false;
+    for (const cat of categories) {
+      const items = products.filter(p => p.categoryId === cat);
+      if (items[index] && mixed.length < count) {
+        mixed.push(items[index]);
+        addedInThisLoop = true;
+      }
+    }
+    if (!addedInThisLoop) break; // no more items in any category at this index
+    index++;
+    loops++;
+  }
+  return mixed;
+};
 
-export default async function Home() {
-  // Fetch up to 10 active products from the shared database
-  const dbProducts = await prisma.product.findMany({
-    where: { isActive: true },
-    take: 10,
-    orderBy: { createdAt: 'desc' }
-  });
-
-  // Map database products to the frontend component format
-  // We use fallback images and ratings since they are not in the core Product schema yet
-  const formattedProducts = dbProducts.map((p: any) => ({
-    id: p.id,
-    name: p.name,
-    price: Number(p.basePrice),
-    oldPrice: Number(p.basePrice) * 1.15, // Example fallback calculation
-    image: '/product_solitaire.png', // Fallback image
-    img: '/product_solitaire.png', // Fallback image for CollectionsSection
-    rating: 4.8,
-    reviews: 12,
-    deliveryTime: 'Tomorrow',
-    isNew: true
-  }));
-
-  // Split into Trending and New Arrivals
-  const trendingProducts = formattedProducts.slice(0, 5);
-  const newArrivals = formattedProducts.slice(5, 10);
-  const weddingProducts = formattedProducts.slice(0, 3); // For the collections section
+export default function Home() {
+  // Use mixed products for Trending & New Arrivals
+  const trendingProducts = getMixedProducts(mockProducts, 8, 0);
+  const newArrivals = getMixedProducts(mockProducts, 8, 1);
+  const weddingProducts = getMixedProducts(mockProducts, 3, 2).map(p => ({ ...p, img: p.image }));
 
   return (
     <>
       <Header />
-
       <main>
-        {/* Full-width Hero Banner Slider */}
         <HeroSlider />
-
-        {/* Full-width Categories Panel */}
         <CategoriesGrid />
 
-        {/* Trending Section — full width */}
+        {/* Trending Section */}
         <section id="trending" className="products-section-wrapper">
           <div className="section-title text-center">
             <h2>Trending Designs</h2>
             <p>Popular choices loved by our community. Handpicked just for you.</p>
           </div>
-          <div className="products-grid">
-            {trendingProducts.length > 0 ? (
-              trendingProducts.map((prod: any) => (
-                <ProductCard key={prod.id} {...prod} />
-              ))
-            ) : (
-              <p style={{ textAlign: 'center', width: '100%', color: '#888' }}>
-                No trending products available. Add some from the Admin Portal!
-              </p>
-            )}
+          <div className="products-slider">
+            {trendingProducts.map((prod) => (
+              <ProductCard key={prod.id} {...prod} />
+            ))}
           </div>
         </section>
 
-        {/* Curated Banners & Collections — full width */}
         <CollectionsSection weddingProducts={weddingProducts} />
 
-        {/* New Arrivals Section — full width */}
-        <section id="rings" className="products-section-wrapper">
+        {/* New Arrivals */}
+        <section id="arrivals" className="products-section-wrapper">
           <div className="section-title text-center">
             <h2>New Arrivals</h2>
             <p>Be the first to wear our latest, high-fashion styles.</p>
           </div>
-          <div className="products-grid">
-            {newArrivals.length > 0 ? (
-              newArrivals.map((prod: any) => (
-                <ProductCard key={prod.id} {...prod} />
-              ))
-            ) : (
-              <p style={{ textAlign: 'center', width: '100%', color: '#888' }}>
-                No new arrivals available. Add some from the Admin Portal!
-              </p>
-            )}
+          <div className="products-slider">
+            {newArrivals.map((prod) => (
+              <ProductCard key={prod.id} {...prod} />
+            ))}
           </div>
         </section>
 
-        {/* Core Values / Advantage Section — full width */}
         <AdvantageSection />
       </main>
-
       <Footer />
     </>
   );

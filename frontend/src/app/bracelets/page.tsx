@@ -1,5 +1,6 @@
 import CategoryPageTemplate from '@/components/CategoryPageTemplate';
 import { prisma } from '@/lib/prisma';
+import { mockProducts } from '@/data/mockProducts';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,7 +9,7 @@ export default async function BraceletsPage() {
     where: { isActive: true, categoryId: 'bracelets' },
     orderBy: { createdAt: 'desc' }
   });
-  
+
   const products = dbProducts.map((p: any) => ({
     id: p.id,
     name: p.name,
@@ -21,6 +22,10 @@ export default async function BraceletsPage() {
     deliveryTime: 'Tomorrow'
   }));
 
+  // Combine DB products with hardcoded mock products for this category
+  const hardcodedBracelets = mockProducts.filter(p => p.categoryId === 'bracelets');
+  const allProducts = [...hardcodedBracelets, ...products];
+
   return (
     <CategoryPageTemplate
       categoryName="Bracelets & Bangles"
@@ -28,7 +33,7 @@ export default async function BraceletsPage() {
       breadcrumb={['Jewellery']}
       subtitle="From delicate chains to bridal bangles — crafted in gold, diamond & platinum"
       bannerImage="/product_bracelet.png"
-      products={products}
+      products={allProducts}
     />
   );
 }

@@ -7,6 +7,7 @@ import Image from 'next/image';
 import MobileCategories from './MobileCategories';
 import AuthModal from './AuthModal';
 import { useRouter } from 'next/navigation';
+import { useCart } from '@/context/CartContext';
 
 interface Suggestion {
   products: { id: string; name: string; price: number; category: string }[];
@@ -24,158 +25,68 @@ interface MenuData {
 
 const menuConfigs: Record<string, MenuData> = {
   'Rings': {
-    featured: ['Latest Designs', 'Bestsellers', 'Solitaire Rings', 'Fast Delivery', 'Special Deals'],
-    styles: ['All Rings', 'Engagement Rings', 'Band Rings', 'Cocktail Rings', 'Eternity Rings', 'Couple Bands', 'Stackable Rings', 'Casual Rings'],
+    featured: ['Latest Designs', 'Bestsellers'],
+    styles: ['Finger Rings'],
     metalStone: [
       { name: 'Diamond', class: 'diamond-dot' },
-      { name: 'Gemstone', class: 'gemstone-dot' },
-      { name: 'Yellow Gold', class: 'yellow-gold-dot' },
-      { name: 'White Gold', class: 'white-gold-dot' },
-      { name: 'Rose Gold', class: 'rose-gold-dot' },
-      { name: 'Platinum', class: 'platinum-dot' }
+      { name: 'Diamond & Blue Stone', class: 'gemstone-dot' },
+      { name: 'Diamond & Red Stone', class: 'rose-gold-dot' },
+      { name: 'Diamond & Green Stone', class: 'navratna-dot' }
     ],
-    prices: ['Under ₹ 10k', '₹ 10k - 20k', '₹ 20k - 30k', '₹ 30k - 50k', 'Above ₹ 50k'],
+    prices: ['₹ 20,000 - ₹ 30,000', '₹ 30,000 - ₹ 40,000', '₹ 40,000 - ₹ 50,000'],
     promos: [
-      { image: '/product_ring.png', title: 'Engagement Rings' },
-      { image: '/product_solitaire.png', title: 'Luxury Solitaires' }
+      { image: '/product_ring.png', title: 'Diamond Rings' },
+      { image: '/product_solitaire.png', title: 'Luxury Rings' }
     ],
-    filters: ['For Women', 'For Men', 'For Kids']
+    filters: ['For Women']
   },
   'Earrings': {
-    featured: ['Latest Designs', 'Bestsellers', 'Fast Delivery', 'Special Deals'],
-    styles: ['All Earrings', 'Studs', 'Hoops', 'Drops', 'Earcuffs', 'Sui Dhagas', 'Jhumkas', 'Silver Earrings'],
+    featured: ['Latest Designs', 'Bestsellers'],
+    styles: ['Nose Pins', 'Studs'],
     metalStone: [
       { name: 'Diamond', class: 'diamond-dot' },
-      { name: 'Pearl', class: 'pearl-dot' },
-      { name: 'Navratna', class: 'navratna-dot' },
-      { name: 'Gemstone', class: 'gemstone-dot' },
-      { name: 'Platinum', class: 'platinum-dot' },
-      { name: 'Rose Gold', class: 'rose-gold-dot' },
-      { name: 'Yellow Gold', class: 'yellow-gold-dot' },
-      { name: 'White Gold', class: 'white-gold-dot' },
-      { name: '22kt Gold', class: 'gold-22kt-dot' }
+      { name: 'Diamond & Blue Stone', class: 'gemstone-dot' },
+      { name: 'Diamond & Red Stone', class: 'rose-gold-dot' },
+      { name: 'Diamond & Green Stone', class: 'navratna-dot' }
     ],
-    prices: ['Under ₹ 10k', '₹ 10k - 20k', '₹ 20k - 30k', '₹ 30k - 50k', '₹ 50k - 75k', 'Above ₹ 75k'],
+    prices: ['₹ 20,000 - ₹ 30,000', '₹ 30,000 - ₹ 40,000', '₹ 40,000 - ₹ 50,000'],
     promos: [
-      { image: '/menu_switch.png', title: 'Switch' },
-      { image: '/menu_hoops.png', title: 'Dancing Hoops' }
+      { image: '/menu_switch.png', title: 'Diamond Studs' },
+      { image: '/menu_hoops.png', title: 'Nose Pins' }
     ],
-    filters: ['For Women', 'For Men', 'For Kids']
+    filters: ['For Women']
   },
   'Bracelets & Bangles': {
-    featured: ['Latest Designs', 'Bestsellers', 'Fast Delivery', 'Special Deals'],
-    styles: ['All Bracelets & Bangles', 'Adjustable Bracelets', 'Chain Bracelets', 'Flexible Bracelets', 'Tennis Bracelets', 'Bridal Bangles', 'Lightweight Bangles', 'Silver Bracelets', 'Oval Bracelets'],
+    featured: ['Latest Designs', 'Bestsellers'],
+    styles: ['Bangles', 'Bracelets'],
     metalStone: [
       { name: 'Diamond', class: 'diamond-dot' },
-      { name: 'Gemstone', class: 'gemstone-dot' },
-      { name: 'Rose Gold', class: 'rose-gold-dot' },
-      { name: 'Platinum', class: 'platinum-dot' },
-      { name: 'Pearl', class: 'pearl-dot' },
-      { name: 'Navratna', class: 'navratna-dot' },
-      { name: 'Yellow Gold', class: 'yellow-gold-dot' },
-      { name: 'White Gold', class: 'white-gold-dot' },
-      { name: '22kt Gold', class: 'gold-22kt-dot' }
+      { name: 'Diamond & Blue Stone', class: 'gemstone-dot' },
+      { name: 'Diamond & Red Stone', class: 'rose-gold-dot' },
+      { name: 'Diamond & Green Stone', class: 'navratna-dot' }
     ],
-    prices: ['Under ₹ 10k', '₹ 10k - 20k', '₹ 20k - 30k', '₹ 30k - 50k', '₹ 50k - 75k', 'Above ₹ 75k'],
+    prices: ['₹ 20,000 - ₹ 30,000', '₹ 30,000 - ₹ 40,000', '₹ 40,000 - ₹ 50,000'],
     promos: [
-      { image: '/product_bracelet.png', title: 'Stretchable Bangles' },
-      { image: '/product_mangalsutra.png', title: 'Watch Charms' }
-    ],
-    filters: ['For Women', 'For Men', 'For Kids']
-  },
-  'Solitaires': {
-    featured: ['Latest Solitaires', 'Bestsellers', 'Hearts & Arrows', 'Special Deals'],
-    styles: ['Solitaire Rings', 'Solitaire Pendants', 'Solitaire Earrings', "Men's Solitaires", 'Couple Solitaires'],
-    metalStone: [
-      { name: 'Platinum', class: 'platinum-dot' },
-      { name: 'Yellow Gold', class: 'yellow-gold-dot' },
-      { name: 'White Gold', class: 'white-gold-dot' },
-      { name: 'Rose Gold', class: 'rose-gold-dot' }
-    ],
-    prices: ['Under ₹ 50k', '₹ 50k - 1L', '₹ 1L - 2L', 'Above ₹ 2L'],
-    promos: [
-      { image: '/product_solitaire.png', title: 'Solitaire Rings' },
-      { image: '/hero_banner_solitaires.png', title: 'Signature Solitaires' }
-    ],
-    filters: ['For Women', 'For Men']
-  },
-  'Mangalsutras': {
-    featured: ['Modern Mangalsutras', 'Traditional Designs', 'Bestsellers', 'Fast Delivery'],
-    styles: ['Chain Mangalsutras', 'Bracelet Mangalsutras', 'Pendant Mangalsutras', 'Short Mangalsutras', 'Gemstone Mangalsutras'],
-    metalStone: [
-      { name: 'Yellow Gold', class: 'yellow-gold-dot' },
-      { name: 'Rose Gold', class: 'rose-gold-dot' },
-      { name: 'Diamond', class: 'diamond-dot' },
-      { name: 'Gemstone', class: 'gemstone-dot' }
-    ],
-    prices: ['Under ₹ 20k', '₹ 20k - 40k', '₹ 40k - 60k', 'Above ₹ 60k'],
-    promos: [
-      { image: '/product_mangalsutra.png', title: 'Gold Bead' },
-      { image: '/cat_pendant.png', title: 'Dailywear' }
+      { image: '/product_bracelet.png', title: 'Diamond Bangles' },
+      { image: '/product_mangalsutra.png', title: 'Charm Bracelets' }
     ],
     filters: ['For Women']
   },
   'Necklaces & Pendants': {
-    featured: ['Everyday Pendants', 'Festive Necklaces', 'Bestsellers', 'Fast Delivery'],
-    styles: ['All Necklaces & Pendants', 'Pendants', 'Lockets', 'Collar Necklaces', 'Chokers', 'Pearl Necklaces', 'Gold Chains'],
+    featured: ['Latest Designs', 'Bestsellers'],
+    styles: ['Necklaces', 'Pendants'],
     metalStone: [
       { name: 'Diamond', class: 'diamond-dot' },
-      { name: 'Gemstone', class: 'gemstone-dot' },
-      { name: 'Yellow Gold', class: 'yellow-gold-dot' },
-      { name: 'Rose Gold', class: 'rose-gold-dot' },
-      { name: 'White Gold', class: 'white-gold-dot' }
+      { name: 'Diamond & Blue Stone', class: 'gemstone-dot' },
+      { name: 'Diamond & Red Stone', class: 'rose-gold-dot' },
+      { name: 'Diamond & Green Stone', class: 'navratna-dot' }
     ],
-    prices: ['Under ₹ 15k', '₹ 15k - 30k', '₹ 30k - 50k', 'Above ₹ 50k'],
+    prices: ['₹ 20,000 - ₹ 30,000', '₹ 30,000 - ₹ 40,000', '₹ 40,000 - ₹ 50,000'],
     promos: [
-      { image: '/cat_pendant.png', title: 'Daily Pendants' },
-      { image: '/polki_banner.png', title: 'Bridal Chokers' }
+      { image: '/cat_pendant.png', title: 'Diamond Pendants' },
+      { image: '/polki_banner.png', title: 'Necklaces' }
     ],
-    filters: ['For Women', 'For Men', 'For Kids']
-  },
-  'Silver by Shaya': {
-    featured: ['Oxidised Silver', 'Fine Silver', 'Minimalist Shaya', 'Bestsellers'],
-    styles: ['Shaya Rings', 'Shaya Earrings', 'Shaya Necklaces', 'Shaya Bracelets', 'Anklets', 'Silver Cuffs'],
-    metalStone: [
-      { name: 'Sterling Silver', class: 'white-gold-dot' },
-      { name: 'Gold-plated Silver', class: 'yellow-gold-dot' },
-      { name: 'Rose-plated Silver', class: 'rose-gold-dot' }
-    ],
-    prices: ['Under ₹ 2k', '₹ 2k - 5k', '₹ 5k - 10k', 'Above ₹ 10k'],
-    promos: [
-      { image: '/cat_hoops.png', title: 'Shaya Hoops' },
-      { image: '/product_bracelet.png', title: 'Silver Cuffs' }
-    ],
-    filters: ['For Women', 'For Men']
-  },
-  'Gifting': {
-    featured: ['Gifts for Her', 'Gifts for Him', 'Kids Gifts', 'Corporate Gifts'],
-    styles: ['Anniversary Gifts', 'Birthday Gifts', "Valentine's Gifts", 'Wedding Gifts', 'Baby Shower', 'Gifts for Mother', 'Gifts for Wife'],
-    metalStone: [
-      { name: 'Diamond Gifts', class: 'diamond-dot' },
-      { name: 'Gold Gifts', class: 'yellow-gold-dot' },
-      { name: 'Silver Gifts', class: 'white-gold-dot' }
-    ],
-    prices: ['Gifts Under ₹ 5k', '₹ 5k - 10k', '₹ 10k - 20k', 'Above ₹ 20k'],
-    promos: [
-      { image: '/cat_wedding.png', title: 'Anniversary Rings' },
-      { image: '/polki_prod2.png', title: 'Bestselling Gifts' }
-    ],
-    filters: ['For Women', 'For Men', 'For Kids']
-  },
-  'Collections': {
-    featured: ['Kaashika Collection', 'Leher Collection', 'Adaa Collection', 'Polki Collection'],
-    styles: ['Everyday Minimalist', 'Office Wear', 'Bridal Collections', 'Festive Edit', 'Modern Western', 'Traditional Indian'],
-    metalStone: [
-      { name: 'Gold Collections', class: 'yellow-gold-dot' },
-      { name: 'Diamond Collections', class: 'diamond-dot' },
-      { name: 'Platinum Collections', class: 'platinum-dot' }
-    ],
-    prices: ['Under ₹ 20k', '₹ 20k - 50k', '₹ 50k - 1L', 'Above ₹ 1L'],
-    promos: [
-      { image: '/col_kaashika.png', title: 'Kaashika' },
-      { image: '/col_adaa.png', title: 'Adaa' }
-    ],
-    filters: ['For Women', 'For Men', 'For Kids']
+    filters: ['For Women']
   }
 };
 
@@ -195,6 +106,7 @@ const categoryRoutes: Record<string, string> = {
 
 export default function Header() {
   const router = useRouter();
+  const { totalItems } = useCart();
   const [pinCode]                                   = useState('682303');
   const [isMenuOpen, setIsMenuOpen]                 = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen]       = useState(false);
@@ -335,13 +247,7 @@ export default function Header() {
     { name: 'Rings',                href: '/rings',         hasMenu: true  },
     { name: 'Earrings',             href: '/earrings',      hasMenu: true  },
     { name: 'Bracelets & Bangles',  href: '/bracelets',     hasMenu: true  },
-    { name: 'Solitaires',           href: '/solitaires',    hasMenu: true  },
-    { name: 'Mangalsutras',         href: '/mangalsutras',  hasMenu: true  },
     { name: 'Necklaces & Pendants', href: '/necklaces',     hasMenu: true  },
-    { name: 'Silver by Shaya',      href: '/silver',        hasMenu: true  },
-    { name: 'Gifting',              href: '/gifting',        hasMenu: true  },
-    { name: 'Collections',          href: '/collections',   hasMenu: true  },
-    { name: 'Trending',             href: '/trending',       hasMenu: false },
   ];
 
   return (
@@ -430,7 +336,11 @@ export default function Header() {
                           key={prod.id}
                           className={`sug-item sug-product${highlightedIdx === idx ? ' sug-highlighted' : ''}`}
                           onMouseEnter={() => setHighlightedIdx(idx)}
-                          onClick={() => { handleSearch(prod.name); }}
+                          onClick={() => {
+                            router.push(`/product/${prod.id}`);
+                            setShowSuggestions(false);
+                            setMobileSearchOpen(false);
+                          }}
                         >
                           <Search size={13} color="#c8b89a" />
                           <span className="sug-item-text">{prod.name}</span>
@@ -471,9 +381,9 @@ export default function Header() {
               <Heart size={20} color="#C9A96E" />
             </Link>
 
-            <Link href="#cart" className="icon-btn flex-center cart-btn">
+            <Link href="/cart" className="icon-btn flex-center cart-btn">
               <ShoppingCart size={20} color="#C9A96E" />
-              <span className="cart-count-badge">1</span>
+              {totalItems > 0 && <span className="cart-count-badge">{totalItems}</span>}
             </Link>
           </div>
         </div>
@@ -692,7 +602,11 @@ export default function Header() {
                   <button
                     key={prod.id}
                     className="mobile-sug-item"
-                    onClick={() => handleSearch(prod.name)}
+                    onClick={() => {
+                      router.push(`/product/${prod.id}`);
+                      setShowSuggestions(false);
+                      setMobileSearchOpen(false);
+                    }}
                   >
                     <span className="mobile-sug-icon"><Search size={14} color="#c8b89a" /></span>
                     <div>
